@@ -9,7 +9,7 @@ export default function NavBar(){
             <div className="w-[15%] p-2">
                 logo
             </div>
-            <div className="flex flex-row w-[85%] text-sm p-2 bg-blue-500">
+            <div className="flex flex-row w-[85%] text-sm p-2 bg-amber-600">
             <div className="hover:text-white mx-8 hover:cursor-pointer">
                 Home
             </div>

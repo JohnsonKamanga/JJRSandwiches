@@ -1,7 +1,7 @@
 export default function Footer(){
 
     return(
-        <div className="h-[6%] p-2 bg-red-500 font-bold">
+        <div className="h-[6%] p-2 font-bold">
             footer
         </div>
     )
