@@ -12,20 +12,21 @@ export default function Main(){
     useEffect(
         ()=> {
         const interval = setInterval( () => {
-            setCurrentImageIndex((currentImageIndex + 1) % images.length)
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
         }, 5000); 
-        console.log(`Current image index: ${currentImageIndex}`)
+        console.log(`Current image index: ${currentImageIndex}`);
         return () => clearInterval(interval);
     }
     , [images.length]);
 
     return(
-        <div className="h-[88%] flex items-center bg-cover bg-center transition-all duration-1000"
+        <div className="h-[88%] bg-cover bg-center transition-all duration-1000"
         style={{
             backgroundImage: `url(${images[currentImageIndex]})`
         }}
-        >
-            <p className="text-white flex text-center">Welcome to JJRSandwiches, home to the best sandwhich recipes one could wish for</p>
+        >   <div className="p-2 bg-black opacity-75 z-[-1]">
+            <h1 className=" text-white text-xl text-center">Welcome to JJRSandwiches, home to the best sandwhich recipes one could wish for</h1>
+            </div>
         </div>
     )
 }
