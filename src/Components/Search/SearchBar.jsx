@@ -40,7 +40,10 @@ export default function SearchBar() {
           ></input>
           <button type="submit">
             {" "}
-            <FontAwesomeIcon icon={faSearch} className="w-[12px] sm:w-[16px] h-[12px] sm:h-[16px]" />
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="w-[12px] sm:w-[16px] h-[12px] sm:h-[16px]"
+            />
           </button>
         </form>
       </div>
@@ -62,35 +65,35 @@ export default function SearchBar() {
             className="w-[8px] md:w-[12px] h-[8px] md:h-[12px] ml-[0.5%]"
           />
         )}
-      
-      {showPopUp && (
-        <div className="flex flex-col p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40 overflow-hidden">
-          <div
-            className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
-            onClick={() => setCurrentOrderByOption(0)}
-          >
-            Default
+
+        {showPopUp && (
+          <div className="flex flex-col p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40 overflow-hidden">
+            <div
+              className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
+              onClick={() => setCurrentOrderByOption(0)}
+            >
+              Default
+            </div>
+            <div
+              className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
+              onClick={() => setCurrentOrderByOption(1)}
+            >
+              Name
+            </div>
+            <div
+              className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
+              onClick={() => setCurrentOrderByOption(2)}
+            >
+              Ingredients
+            </div>
+            <div
+              className="hover:font-semibold hover:cursor-pointer"
+              onClick={() => setCurrentOrderByOption(3)}
+            >
+              Time
+            </div>
           </div>
-          <div
-            className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
-            onClick={() => setCurrentOrderByOption(1)}
-          >
-            Name
-          </div>
-          <div
-            className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
-            onClick={() => setCurrentOrderByOption(2)}
-          >
-            Ingredients
-          </div>
-          <div
-            className="hover:font-semibold hover:cursor-pointer"
-            onClick={() => setCurrentOrderByOption(3)}
-          >
-            Time
-          </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
