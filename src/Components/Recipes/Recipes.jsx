@@ -142,7 +142,9 @@ export default function Recipes() {
       >
         <img src={recipe.image} alt={recipe.name} className="rounded-xl "></img>
         <div className="flex flex-col p-2 mt-2 border-[1px] rounded-md border-black border-opacity-20">
-          <div className="p-1 font-bold flex justify-center text-xs sm:text-sm md:text-base">{recipe.name}</div>
+          <div className="p-1 font-bold flex justify-center text-xs sm:text-sm md:text-base">
+            {recipe.name}
+          </div>
           <span className=" font-light flex justify-center text-xs sm:text-sm md:text-base">
             {`${recipe.ingredients[0].name}, ${recipe.ingredients[1].name}, ${recipe.ingredients[2].name}...`}
           </span>
@@ -151,11 +153,11 @@ export default function Recipes() {
           </span>
         </div>
         <div className=" my-1 font-semibold flex justify-center text-center hover:cursor-pointer">
-          <NavLink to="/RecipeInstructions" className="bg-amber-400 hover:bg-amber-700 w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base">
-          <span>
-            {" "}
-            Full Recipe
-          </span>
+          <NavLink
+            to="/RecipeInstructions"
+            className="bg-amber-400 hover:bg-amber-700 w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
+          >
+            <span> Full Recipe</span>
           </NavLink>
         </div>
       </div>
@@ -167,7 +169,9 @@ export default function Recipes() {
       <NavBar />
       <SearchBar />
       <div className="flex bg-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-3">{recipes.map(drawTiles)}</div>
+        <div className="grid grid-cols-2 md:grid-cols-3">
+          {recipes.map(drawTiles)}
+        </div>
       </div>
       <Footer />
     </div>
