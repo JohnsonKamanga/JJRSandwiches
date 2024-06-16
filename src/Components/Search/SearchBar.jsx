@@ -21,7 +21,7 @@ export default function SearchBar() {
   const OrderByOptions = ["OrderBy", "Name", "Ingredients", "Time"];
 
   return (
-    <div className="min-w-full h-[15%] md:h-[7%] lg:h-[8%] flex flex-col items-center p-2">
+    <div className="min-w-full h-[15%] md:h-[7%] lg:h-[8%] xl:h-[15%] flex flex-col items-center p-2">
       <div className="w-[60%] flex flex-row items-center mb-2 border-[1px] rounded-xl border-black border-opacity-20 focus-within:border-opacity-65">
         <form
           className="flex flex-row items-center w-[100%]"
