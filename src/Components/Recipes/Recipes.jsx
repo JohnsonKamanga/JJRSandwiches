@@ -138,10 +138,14 @@ export default function Recipes() {
     return (
       <div
         key={Math.random()}
-        className="m-2 p-2 h-fit border-[1px] bg-white border-black hover:border-opacity-75 border-opacity-20 rounded-xl"
+        className="m-2 p-2 h-fit border-[1px] bg-white border-black hover:border-opacity-75 border-opacity-20 rounded-[24px]"
       >
-        <img src={recipe.image} alt={recipe.name} className="rounded-xl "></img>
-        <div className="flex flex-col p-2 mt-2 border-[1px] rounded-md border-black border-opacity-20">
+        <img
+          src={recipe.image}
+          alt={recipe.name}
+          className="rounded-[18px] "
+        ></img>
+        <div className="flex flex-col p-2 mt-2 border-[1px] rounded-[18px] border-black border-opacity-20">
           <div className="p-1 font-bold flex justify-center text-xs sm:text-sm md:text-base">
             {recipe.name}
           </div>
@@ -155,7 +159,7 @@ export default function Recipes() {
         <div className=" my-1 font-semibold flex justify-center text-center hover:cursor-pointer">
           <NavLink
             to="/RecipeInstructions"
-            className="bg-amber-400 hover:bg-amber-700 w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
+            className=" bg-[#f29260] hover:bg-[#f87058] w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
           >
             <span> Full Recipe</span>
           </NavLink>
@@ -165,15 +169,18 @@ export default function Recipes() {
   };
 
   return (
-    <div className="flex flex-col min-h-full h-screen">
-      <NavBar />
-      <SearchBar />
-      <div className="flex bg-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-3">
-          {recipes.map(drawTiles)}
+    <div>
+      <div className="flex flex-col min-h-full h-screen">
+        <NavBar />
+
+        <SearchBar />
+        <div className=" bg-gray-200 ">
+          <div className="grid grid-cols-2 md:grid-cols-3">
+            {recipes.map(drawTiles)}
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 }
