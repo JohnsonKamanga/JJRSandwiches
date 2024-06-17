@@ -1,8 +1,9 @@
 import NavBar from "../HomePage/NavBar";
 import Footer from "../HomePage/Footer";
-import BgImage1 from "../HomePage/pexels-alex-green-5692286.jpg";
-import BgImage2 from "../HomePage/pexels-anton-porsche-37909-133578.jpg";
-import BgImage3 from "../HomePage/pexels-brigitte-tohm-36757-350343.jpg";
+import BgImage1 from "./fast-food-2132863_1920.jpg";
+import BgImage2 from "./food-6697405_1920.jpg";
+import BgImage3 from "./sandwich-2301387_1920.jpg";
+import BgImage4 from "./toast-6011147_1920.jpg";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +16,7 @@ export default function AboutUs() {
       name: "Our Story",
       value: (
         <div>
-          <h2 className="font-bold text-xl text-center">Our Story</h2>
+          <h2 className="font-bold text-lg sm:text-xl text-center">Our Story</h2>
           <p className="p-2 font-normal">
             Founded by a group of sandwich enthusiasts, JJRSandwiches is a
             tribute to the humble yet extraordinary sandwich. We started this
@@ -30,7 +31,7 @@ export default function AboutUs() {
       name: "Our Mission",
       value: (
         <div>
-          <h2 className="font-bold text-xl text-center">Our Mission</h2>
+          <h2 className="font-bold text-lg sm:text-xl text-center">Our Mission</h2>
 
           <p className="p-2 font-normal">
             Our mission is to bring together sandwich lovers from all corners of
@@ -46,7 +47,7 @@ export default function AboutUs() {
       name: "Community and Sharing",
       value: (
         <div>
-          <h2 className="font-bold text-xl text-center">
+          <h2 className="font-bold text-lg sm:text-xl text-center">
             Community and Sharing
           </h2>
 
@@ -65,22 +66,22 @@ export default function AboutUs() {
       name: "What We Offer",
       value: (
         <div>
-          <h2 className="font-bold text-xl text-center">What We Offer</h2>
-          <ul className="p-2 list-disc">
-            <li>
+          <h2 className="font-bold text-lg sm:text-xl text-center">What We Offer</h2>
+          <ul className="p-2 list-disc text-s">
+            <li className="mx-5">
               Diverse Recipes: From timeless classics to innovative new
               combinations, our collection of sandwich recipes is vast and
               varied. Each recipe is contributed by passionate sandwich makers
               from around the world, offering a taste of different cultures and
               culinary traditions.
             </li>
-            <li>
+            <li className="mx-5">
               Tips and Tricks: Learn from the best with our handy tips and
               tricks section. Whether it's mastering the perfect toast,
               balancing flavors, or finding the best ingredients, our community
               shares valuable insights to elevate your sandwich-making skills.
             </li>
-            <li>
+            <li className="mx-5">
               Community Stories: Food is not just about eating; it's about
               sharing experiences and creating memories. Read and share stories
               about your sandwich-making adventures, favorite food moments, and
@@ -93,34 +94,34 @@ export default function AboutUs() {
     {
       name: "Get Involved",
       value: (
-        <div>
+        <div className="p-2 font-normal">
           <h2 className="font-bold text-xl text-center">Get Involved</h2>
-          <p className="p-2 font-normal">
+          <p>
             Join us in our mission to celebrate the sandwich. Whether you have a
             family recipe that's been passed down through generations or a new
             creation you're excited to share, JJRSandwiches is the perfect place
-            to showcase your culinary talents.
+            to showcase your culinary talents.</p>
             <ul className=" list-disc ">
-              <li>
+              <li className="mx-5">
                 Share Your Recipe: Submit your favorite sandwich recipes and
                 get featured on our website.
               </li>
-              <li>
+              <li className="mx-5">
                 Connect with Others: Engage with fellow sandwich enthusiasts
                 through comments, forums, and social media.
               </li>
-              <li>
+              <li className="mx-5">
                 Stay Inspired: Follow our blog for the latest sandwich trends,
                 seasonal recipes, and community highlights.
               </li>
             </ul>
-          </p>
+          
         </div>
       ),
     },
   ];
 
-  const images = [BgImage1, BgImage2, BgImage3];
+  const images = [BgImage1, BgImage2, BgImage3, BgImage4];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -140,16 +141,16 @@ export default function AboutUs() {
         backgroundImage: `url(${images[currentImageIndex]})`,
       }}
     >
-      <div className="flex flex-col justify-between bg-black bg-opacity-35 min-h-full text-center">
+      <div className="flex flex-col sm:justify-between bg-black bg-opacity-35 min-h-full text-center text-xs sm:text-sm md:text-base">
         <div>
-        <h1 className="font-bold text-3xl mt-[2%]">About Us</h1>
+        <h1 className="font-bold text-2xl sm:text-3xl mt-[2%]">About Us</h1>
 
         <p className="p-2 font-normal">
           Welcome to JJRSandwiches, where the art of sandwich-making meets the
           joy of community, sharing, and food!
         </p>
         </div>
-        <div className="flex flex-row items-center text-center mx-2 lg:mx-[30%] p-3 border-[1px] border-white rounded-[24px]">
+        <div className="flex flex-row h-[350px] sm:h-[285px] items-center text-center mx-2 lg:mx-[20%] p-3 border-[1px] border-white rounded-[24px]">
           <button
             onClick={() =>
               setCurrentContentIndex(
