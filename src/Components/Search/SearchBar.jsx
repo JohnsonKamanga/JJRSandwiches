@@ -48,7 +48,7 @@ export default function SearchBar() {
         </form>
       </div>
       <div
-        className="p-1 flex flex-row items-center rounded-xl border-black border-opacity-25 border-[1px] hover:cursor-pointer hover:bg-gray-100 focus:border-opacity-65 relative"
+        className="p-1 popup flex flex-row items-center rounded-xl border-black border-opacity-25 border-[1px] hover:cursor-pointer hover:bg-gray-100 focus:border-opacity-65 relative"
         onClick={() => setShowPopUp(!showPopUp)}
       >
         <span className="font-medium text-xs md:text-sm p-1">
@@ -67,7 +67,7 @@ export default function SearchBar() {
         )}
 
         {showPopUp && (
-          <div className="flex flex-col p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40 overflow-hidden">
+          <div className="flex flex-col popup w-[120%] p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40">
             <div
               className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
               onClick={() => setCurrentOrderByOption(0)}
