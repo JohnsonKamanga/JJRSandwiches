@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import Logo from "../../../public/logo-no-background.png";
+import Logo from "../../Logos/logo-no-background.png";
 
 export default function NavBar() {
   const [dropDownIsOpen, setDropDownIsOpen] = useState(false);

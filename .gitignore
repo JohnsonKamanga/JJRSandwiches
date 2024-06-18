@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 package-lock.json
+JJRSandwiches.code-workspace
 
 # Editor directories and files
 .vscode/*
