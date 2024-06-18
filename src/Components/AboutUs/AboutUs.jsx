@@ -73,7 +73,7 @@ export default function AboutUs() {
           <h2 className="font-bold text-lg sm:text-xl text-center">
             What We Offer
           </h2>
-          <ul className="p-2 list-disc text-s">
+          <ul className="p-2 list-disc">
             <li className="mx-5">
               Diverse Recipes: From timeless classics to innovative new
               combinations, our collection of sandwich recipes is vast and
@@ -154,7 +154,7 @@ export default function AboutUs() {
                 About Us
               </h1>
 
-              <p className="p-2 font-normal">
+              <p className="p-2 lg:text-xl font-normal">
                 Welcome to JJRSandwiches, where the art of sandwich-making meets
                 the joy of community, sharing, and food!
               </p>
@@ -185,7 +185,7 @@ export default function AboutUs() {
               </button>
             </div>
 
-            <p className="p-2 font-normal mb-[2%]">
+            <p className="p-2 font-normal lg:text-xl mb-[2%]">
               Thank you for being a part of our community. Together, let's
               explore, create, and share the delicious world of sandwiches, one
               recipe at a time.
