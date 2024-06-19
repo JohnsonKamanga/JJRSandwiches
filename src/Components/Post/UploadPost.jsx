@@ -1,11 +1,11 @@
 import Footer from "../HomePage/Footer";
 import NavBar from "../HomePage/NavBar";
 
-export default function Post() {
+export default function UploadPost() {
   return (
     <div className="min-h-full h-screen">
       <NavBar />
-      <div className="h-[88%]">posting content</div>
+      <div className="h-[88%]">upload post</div>
       <Footer />
     </div>
   );
