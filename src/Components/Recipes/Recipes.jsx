@@ -138,7 +138,7 @@ export default function Recipes() {
     return (
       <div
         key={Math.random()}
-        className="m-2 p-2 h-fit border-[1px] bg-white border-black hover:border-opacity-75 border-opacity-20 rounded-[24px]"
+        className="m-2 p-2 h-fit transition-all duration-[200ms] border-[1px] bg-white border-black hover:border-opacity-75 border-opacity-20 rounded-[24px]"
       >
         <img
           src={recipe.image}
@@ -159,7 +159,7 @@ export default function Recipes() {
         <div className=" my-1 font-semibold flex justify-center text-center hover:cursor-pointer">
           <NavLink
             to="/RecipeInstructions"
-            className=" bg-[#f29260] hover:bg-[#f87058] w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
+            className="transition-colors duration-[200ms] bg-[#f29260] hover:bg-[#f87058] w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
           >
             <span> Full Recipe</span>
           </NavLink>
@@ -174,7 +174,7 @@ export default function Recipes() {
         <NavBar />
 
         <SearchBar />
-        <div className=" bg-gray-200 ">
+        <div className=" faq-transition ">
           <div className="grid grid-cols-2 md:grid-cols-3">
             {recipes.map(drawTiles)}
           </div>

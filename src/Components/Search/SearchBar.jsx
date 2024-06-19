@@ -4,6 +4,7 @@ import {
   faCaretDown,
   faAngleDown,
 } from "@fortawesome/free-solid-svg-icons";
+import { wait } from "../../utilities";
 import { useState } from "react";
 
 export default function SearchBar() {
@@ -49,7 +50,20 @@ export default function SearchBar() {
       </div>
       <div
         className="p-1 popup flex flex-row w-[16%] lg:w-[8%] justify-center items-center rounded-xl border-black border-opacity-25 border-[1px] hover:cursor-pointer hover:bg-gray-100 focus:border-opacity-65 relative"
-        onClick={() => setShowPopUp(!showPopUp)}
+        onClick={async () => {
+          const drop = document.getElementById("popup");
+          if (showPopUp === false) {
+            drop.style.display = "block";
+            await wait(200);
+            drop.style.opacity = "1.0";
+          } else {
+            drop.style.opacity = "0.0";
+            await wait(200);
+            drop.style.display = "none";
+            
+          }
+          setShowPopUp(!showPopUp);
+        }}
       >
         <span className="font-medium text-xs md:text-sm p-1">
           {OrderByOptions[currentOrderByOption]}
@@ -65,9 +79,7 @@ export default function SearchBar() {
             className="w-[8px] md:w-[12px] h-[8px] md:h-[12px] ml-[0.5%]"
           />
         )}
-
-        {showPopUp && (
-          <div className="flex flex-col popup w-[120%] p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40">
+          <div id="popup" className="hidden transition-opacity duration-[150ms] opacity-0 popup w-[120%] p-2 text-sm rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[110%]  left-[50%] z-40">
             <div
               className=" border-b-[1px] border-black border-opacity-20 hover:font-semibold hover:cursor-pointer"
               onClick={() => setCurrentOrderByOption(0)}
@@ -93,7 +105,6 @@ export default function SearchBar() {
               Time
             </div>
           </div>
-        )}
       </div>
     </div>
   );

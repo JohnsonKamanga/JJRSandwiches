@@ -43,7 +43,7 @@ export default function Main() {
             elevate your sandwich game to newer heights.
           </p>
         </div>
-        <div className=" rounded-3xl border-[2px] p-2 text-xs md:text-sm text-white hover:cursor-pointer hover:bg-white hover:bg-opacity-40">
+        <div className=" rounded-3xl border-[2px] p-2 text-xs md:text-sm text-white hover:cursor-pointer transition-colors duration-300 hover:bg-white hover:bg-opacity-40">
           <NavLink to="/LoginPage">Join The Community</NavLink>
         </div>
       </div>

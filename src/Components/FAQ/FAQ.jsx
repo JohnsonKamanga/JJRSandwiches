@@ -3,6 +3,7 @@ import Footer from "../HomePage/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { wait } from "../../utilities";
 
 export default function FAQ() {
   const [arrowDirections, setArrowDirections] = useState([
@@ -146,18 +147,25 @@ export default function FAQ() {
   const drawQuestionAndAnswers = (questionAndAnswer) => {
     return(
       <div key={questionAndAnswer.question} className="flex flex-col p-2 text-black">
-        <div className="p-1 font-medium text-base lg:text-lg hover:cursor-pointer hover:text-[#f29260]"
-        onClick={()=>{
+        <div className="p-1 font-medium text-base lg:text-lg hover:cursor-pointer transition-colors duration-300 hover:text-[#f29260]"
+        onClick={async ()=>{
           const tab = document.getElementById(questionAndAnswer.question);
-         questionAndAnswer.showAnswer === false ? 
-         tab.style.display = "block" :
+         if(questionAndAnswer.showAnswer === false){
+          tab.style.display = "block";
+          await wait(200);
+          tab.style.opacity = "1";
+         }
+         else{
+          tab.style.opacity = "0";
+          await wait(200);
           tab.style.display = "none";
-            questionAndAnswer.showAnswer = !(questionAndAnswer.showAnswer);
+         }
+         questionAndAnswer.showAnswer = !(questionAndAnswer.showAnswer);
         }}
         >
         {questionAndAnswer.question}
         </div>
-        <div className="p-1 hidden" id={questionAndAnswer.question}>{questionAndAnswer.answer}</div>
+        <div className="p-1 transition-all duration[350ms] opacity-0 hidden" id={questionAndAnswer.question}>{questionAndAnswer.answer}</div>
       </div>
     )
   };
@@ -166,12 +174,19 @@ export default function FAQ() {
     let temp = arrowDirections;
       return(
         <div key={section.section} className="flex flex-col p-2  border-b-[1px] border-black border-opacity-15">
-          <div className="flex flex-row items-center justify-between font-semibold p-1 hover:cursor-pointer hover:text-[#f29260]"
-          onClick={() => {
+          <div className="flex flex-row items-center justify-between font-semibold p-1 hover:cursor-pointer transition-colors duration-300 hover:text-[#f29260]"
+          onClick={async () => {
             const tab = document.getElementById(section.section);
-           section.showQuestions === false ? 
-           tab.style.display = "block" :
+           if(section.showQuestions === false ){
+            tab.style.display = "block";
+            await wait(200);
+            tab.style.opacity = "1"; 
+           }
+           else{
+            tab.style.opacity = "0";
+            await wait(200);
             tab.style.display = "none";
+           }
               section.showQuestions = !(section.showQuestions);
               temp[sectionQuestionAndAnswers.indexOf(section)] = !temp[sectionQuestionAndAnswers.indexOf(section)];
               setArrowDirections(temp); 
@@ -182,7 +197,7 @@ export default function FAQ() {
           :
           (<FontAwesomeIcon icon={faAngleDown} className="text-black"/>)}
           </div>
-          <div className="hidden p-1 bg-gray-200 rounded-[18px]" id={section.section} >
+          <div className="hidden transition-all duration-[350ms] opacity-0 p-1 bg-gray-200 rounded-[18px]" id={section.section} >
             {section.QuestionAndAnswers.map(drawQuestionAndAnswers)}
           </div>
         </div>
@@ -190,10 +205,10 @@ export default function FAQ() {
   };
 
   return (
-    <div>
-    <div className="flex flex-col min-h-full h-screen">
+    <div >
+    <div className="flex flex-col min-h-full h-screen overflow-y-auto ">
       <NavBar />
-      <div className="flex flex-col items-center p-2 min-h-full faq-transition">
+      <div className="flex flex-col  items-center p-2 min-h-full faq-transition">
       <div className="mb-[5%] mt-[1%]">
       <h1 className="font-bold text-center text-4xl lg:text-5xl">FAQ</h1>
 
@@ -201,7 +216,7 @@ export default function FAQ() {
         If you don't find what you're looking for, feel free to contact us.
         </p>
         </div>
-        <div className="popup border-[1px] border-black border-opacity-25 w-full lg:w-[70%] rounded-[18px]  overflow-y-auto">
+        <div className="popup border-[1px] question-tab-transition border-black border-opacity-25 w-full lg:w-[70%] rounded-[18px] overflow-y-auto">
           {sectionQuestionAndAnswers.map(drawSectionQuestionAndAnswers)}
         </div>
          
