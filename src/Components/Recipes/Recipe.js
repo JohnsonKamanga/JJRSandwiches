@@ -5,11 +5,13 @@ export class Recipe{
     ingredients;
     image;
     estimatedPreparationTime;
+    instructions;
 
-    constructor(name, image, ingredients, time){
+    constructor(name, image, ingredients, time, instructions){
         this.name = name;
         this.image = image;
         this.ingredients = ingredients;
         this.estimatedPreparationTime = time;
+        this.ingredients = instructions;
     }
 }
