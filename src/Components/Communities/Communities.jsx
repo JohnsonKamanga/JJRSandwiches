@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpRightFromSquare, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../Search/SearchBar";
+import { NavLink } from "react-router-dom";
 
 
 export default function Communities() {
@@ -65,7 +66,9 @@ const drawCommunities = (community) => {
     <div className="flex flex-row justify-between p-1 rounded-[28px] items-center border-[1px] border-black bg-white border-opacity-35 hover:border-opacity-95 hover:cursor-pointer">
      <div className="flex flex-row items-center">
       <FontAwesomeIcon icon={faUserCircle} className="text-5xl mr-[5%] ml-[0.5%]"/>
-      <div className="font-medium lg:text-xl ">{community.name}</div>
+      <NavLink to="/CommunityPage">
+      <div className="font-medium hover:text-[#f29260] lg:text-xl ">{community.name}</div>
+      </NavLink>
       </div>
       <div className="mr-[5%] p-2 lg:text-xs text-[8px] flex"><span className="mt-[16%]">2000000+ members</span></div>
     </div>

@@ -97,7 +97,7 @@ export default function NavBar() {
               Manage Account
             </div>
           </NavLink>
-          <NavLink to="/Post">
+          <NavLink to="/UploadPost">
             <div className="hover:cursor-pointer hover:font-[500]">
               Upload New Recipe
             </div>

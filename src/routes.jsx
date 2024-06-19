@@ -4,10 +4,13 @@ import Recipes from "./Components/Recipes/Recipes";
 import AboutUs from "./Components/AboutUs/AboutUs";
 import FAQ from "./Components/FAQ/FAQ";
 import LoginPage from "./Components/Accounts/LoginPage";
-import Post from "./Components/Post/Post";
+import UploadPost from "./Components/Post/UploadPost";
 import RecipeInstructions from "./Components/Recipes/RecipeInstructions";
 import Communities from "./Components/Communities/Communities";
 import AccountPage from "./Components/Accounts/AccountPage";
+import CommunityPage from "./Components/Communities/CommunityPage";
+import ViewPost from "./Components/Post/ViewPost";
+import ViewAccount from "./Components/Accounts/ViewAccount";
 
 export const router = createBrowserRouter([
   {
@@ -31,8 +34,8 @@ export const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/Post",
-    element: <Post />,
+    path: "/UploadPost",
+    element: <UploadPost />,
   },
   {
     path: "/RecipeInstructions",
@@ -49,5 +52,16 @@ export const router = createBrowserRouter([
   {
     path: "/AccountPage",
     element: <AccountPage />,
+  },{
+    path: "/CommunityPage",
+    element: <CommunityPage/>
   },
+  {
+    path: "/ViewPost",
+    element: <ViewPost/>
+  },
+  {
+    path: "/ViewAccount",
+    element: <ViewAccount/>
+  }
 ]);
