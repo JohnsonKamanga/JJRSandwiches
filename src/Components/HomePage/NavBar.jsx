@@ -90,7 +90,7 @@ export default function NavBar() {
         />
         <div
           id="dropDown"
-          className="hidden opacity-0  transition-opacity duration-[150ms] w-[200%] lg:w-[129%] p-3 text-xs sm:text-sm md:text-base md:p-4 text-center items-center rounded-md border-[1px] border-black popup border-opacity-60 absolute top-[90%] -left-[140%] sm:-left-[150%] md:-left-[150%] lg:-left-[100%] xl:-left-[55%] z-40"
+          className="hidden opacity-0  transition-opacity duration-[150ms] w-[200%] lg:w-[129%] p-3 text-xs sm:text-sm md:text-base md:p-4 text-center items-center rounded-md border-[1px] border-black bg-white border-opacity-60 absolute top-[90%] -left-[140%] sm:-left-[150%] md:-left-[150%] lg:-left-[100%] xl:-left-[55%] z-40"
         >
           <NavLink to="/AccountPage">
             <div className="hover:cursor-pointer hover:font-[500]">
