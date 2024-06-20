@@ -11,6 +11,7 @@ import AccountPage from "./Components/Accounts/AccountPage";
 import CommunityPage from "./Components/Communities/CommunityPage";
 import ViewPost from "./Components/Post/ViewPost";
 import ViewAccount from "./Components/Accounts/ViewAccount";
+import SignUpPage from "./Components/Accounts/SignUpPage";
 
 export const router = createBrowserRouter([
   {
@@ -63,5 +64,9 @@ export const router = createBrowserRouter([
   {
     path: "/ViewAccount",
     element: <ViewAccount/>
+  },
+  {
+    path: "/SignUpPage",
+    element: <SignUpPage/>
   }
 ]);
