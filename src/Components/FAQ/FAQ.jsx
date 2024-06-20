@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { wait } from "../../utilities";
+import BgImage from "./sandwich-2619172_1920.jpg"
 
 export default function FAQ() {
   const [arrowDirections, setArrowDirections] = useState([
@@ -146,7 +147,7 @@ export default function FAQ() {
 
   const drawQuestionAndAnswers = (questionAndAnswer) => {
     return(
-      <div key={questionAndAnswer.question} className="flex flex-col p-2 text-black">
+      <div key={questionAndAnswer.question} className="flex flex-col p-2">
         <div className="p-1 font-medium text-base lg:text-lg hover:cursor-pointer transition-colors duration-300 hover:text-[#f29260]"
         onClick={async ()=>{
           const tab = document.getElementById(questionAndAnswer.question);
@@ -173,7 +174,7 @@ export default function FAQ() {
   const drawSectionQuestionAndAnswers = (section) => {
     let temp = arrowDirections;
       return(
-        <div key={section.section} className="flex flex-col p-2  border-b-[1px] border-black border-opacity-15">
+        <div key={section.section} className="flex flex-col p-2  border-b-[1px] border-white border-opacity-25 ">
           <div className="flex flex-row items-center justify-between font-semibold p-1 hover:cursor-pointer transition-colors duration-300 hover:text-[#f29260]"
           onClick={async () => {
             const tab = document.getElementById(section.section);
@@ -193,11 +194,11 @@ export default function FAQ() {
           }}
           ><span className=" text-lg lg:text-xl">{section.section}</span>
           { arrowDirections[sectionQuestionAndAnswers.indexOf(section)] ? 
-          (<FontAwesomeIcon icon={faAngleUp} className="text-black"/>)
+          (<FontAwesomeIcon icon={faAngleUp} className="text-white"/>)
           :
-          (<FontAwesomeIcon icon={faAngleDown} className="text-black"/>)}
+          (<FontAwesomeIcon icon={faAngleDown} className="text-white"/>)}
           </div>
-          <div className="hidden transition-all duration-[350ms] opacity-0 p-1 bg-gray-200 rounded-[18px]" id={section.section} >
+          <div className="hidden transition-all duration-[350ms] opacity-0 p-1 bg-black bg-opacity-40 rounded-[18px]" id={section.section} >
             {section.QuestionAndAnswers.map(drawQuestionAndAnswers)}
           </div>
         </div>
@@ -208,21 +209,26 @@ export default function FAQ() {
     <div >
     <div className="flex flex-col min-h-full h-screen overflow-y-auto ">
       <NavBar />
-      <div className="flex flex-col  items-center p-2 min-h-full faq-transition">
-      <div className="mb-[5%] mt-[1%]">
-      <h1 className="font-bold text-center text-4xl lg:text-5xl">FAQ</h1>
+      <div className="flex flex-col bg-fixed bg-cover bg-center items-center min-h-full "
+      style={{
+        backgroundImage: `url(${BgImage})`
+      }}
+      >
+        <div className="flex flex-col items-center p-2 backdrop-blur-[8px] min-h-full h-screen bg-black  bg-opacity-35 text-white border-[1px]">
+      <div className="mb-[5%] mt-[1%] text-white w-[75%]">
+      <h1 className="text-center font-bold text-2xl sm:text-3xl">FAQ</h1>
 
-      <p className="text-center text-lg lg:text-2xl">Welcome to our FAQ page! Here, you'll find answers to the most common questions about JJRSadwiches. 
+      <p className="text-center p-2 lg:text-xl font-normal">Welcome to our FAQ page! Here, you'll find answers to the most common questions about JJRSadwiches. 
         If you don't find what you're looking for, feel free to contact us.
         </p>
         </div>
-        <div className="popup border-[1px] question-tab-transition border-black border-opacity-25 w-full lg:w-[70%] rounded-[18px] overflow-y-auto">
+        <div className="bg-black  bg-opacity-10 text-white border-[1px] question-tab-transition border-white border-opacity-75 w-full lg:w-[70%] rounded-[18px] overflow-y-auto">
           {sectionQuestionAndAnswers.map(drawSectionQuestionAndAnswers)}
         </div>
          
          
          </div>
-         
+         </div>
       <Footer />
     </div>
     </div>
