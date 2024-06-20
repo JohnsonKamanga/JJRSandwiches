@@ -159,14 +159,14 @@ export default function AboutUs() {
                 the joy of community, sharing, and food!
               </p>
             </div>
-            <div className="flex flex-row h-[350px] sm:h-[285px] items-center text-center mx-2 lg:mx-[20%] p-3 border-[1px] border-white rounded-[24px]">
+            <div className="flex flex-row h-[350px] sm:h-[285px] items-center text-center mx-2 lg:mx-[20%] p-3 border-[1px] border-white rounded-[24px] bg-black bg-opacity-15">
               <button
                 onClick={() =>
                   setCurrentContentIndex(
                     currentContentIndex > 0 ? currentContentIndex - 1 : 0
                   )
                 }
-                className="p-2 bg-gray-200 border-[1px] border-white hover:animate-bounce rounded-full"
+                className="p-2 bg-gray-200 border-[1px] border-white hover:animate-pulse rounded-full"
               >
                 <FontAwesomeIcon icon={faAngleLeft} className="text-black" />
               </button>
@@ -179,7 +179,7 @@ export default function AboutUs() {
                       : currentContentIndex
                   )
                 }
-                className="p-2 bg-gray-200 border-[1px] border-white hover:animate-bounce  rounded-full"
+                className="p-2 bg-gray-200 border-[1px] border-white hover:animate-pulse  rounded-full"
               >
                 <FontAwesomeIcon icon={faAngleRight} className="text-black" />
               </button>
