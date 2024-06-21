@@ -7,11 +7,13 @@ import LoginPage from "./Components/Accounts/LoginPage";
 import UploadPost from "./Components/Post/UploadPost";
 import RecipeInstructions from "./Components/Recipes/RecipeInstructions";
 import Communities from "./Components/Communities/Communities";
-import AccountPage from "./Components/Accounts/AccountPage";
+import ProfileCreation from "./Components/Accounts/ProfileCreation";
 import CommunityPage from "./Components/Communities/CommunityPage";
 import ViewPost from "./Components/Post/ViewPost";
 import ViewAccount from "./Components/Accounts/ViewAccount";
 import SignUpPage from "./Components/Accounts/SignUpPage";
+import AccountPage from "./Components/Accounts/AccountPage";
+
 
 export const router = createBrowserRouter([
   {
@@ -51,8 +53,8 @@ export const router = createBrowserRouter([
     element: <AboutUs />,
   },
   {
-    path: "/AccountPage",
-    element: <AccountPage />,
+    path: "/ProfileCreation",
+    element: <ProfileCreation />,
   },{
     path: "/CommunityPage",
     element: <CommunityPage/>
@@ -68,5 +70,9 @@ export const router = createBrowserRouter([
   {
     path: "/SignUpPage",
     element: <SignUpPage/>
+  },
+  {
+    path: "/AccountPage",
+    element: <AccountPage/>
   }
 ]);
