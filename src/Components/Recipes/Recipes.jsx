@@ -138,14 +138,14 @@ export default function Recipes() {
     return (
       <div
         key={Math.random()}
-        className="m-2 p-2 h-fit transition-all duration-[200ms] border-[1px] bg-white border-black hover:border-opacity-75 border-opacity-20 rounded-[24px]"
+        className="m-2 p-2 h-fit text-white transition-all duration-[200ms] border-[1px] bg-black bg-opacity-25 border-white hover:border-opacity-45 border-opacity-25 rounded-[24px]"
       >
         <img
           src={recipe.image}
           alt={recipe.name}
           className="rounded-[18px] "
         ></img>
-        <div className="flex flex-col p-2 mt-2 border-[1px] rounded-[18px] border-black border-opacity-20">
+        <div className="flex flex-col p-2 mt-2 border-[1px] rounded-[18px] border-black border-opacity-20 bg-black bg-opacity-65">
           <div className="p-1 font-bold flex justify-center text-xs sm:text-sm md:text-base">
             {recipe.name}
           </div>
@@ -159,7 +159,7 @@ export default function Recipes() {
         <div className=" my-1 font-semibold flex justify-center text-center hover:cursor-pointer">
           <NavLink
             to="/RecipeInstructions"
-            className="transition-colors duration-[200ms] bg-[#f29260] hover:bg-[#f87058] w-[50%] rounded-3xl p-1 text-xs sm:text-sm md:text-base"
+            className="transition-colors duration-[200ms] bg-[#f29260] hover:bg-[#f87058] w-[50%] rounded-3xl border-[1px] border-black border-opacity-40 p-1 text-xs sm:text-sm md:text-base"
           >
             <span> Full Recipe</span>
           </NavLink>
