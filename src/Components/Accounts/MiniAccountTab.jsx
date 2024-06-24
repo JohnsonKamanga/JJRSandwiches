@@ -20,7 +20,7 @@ export default function MiniAccountTab() {
         </NavLink>
           <div className="flex items-center p-2 font-extralight rounded-[20px]">
             <FontAwesomeIcon icon={faUserCircle} className="text-xl" />
-            <NavLink to="/AccountPage" className="flex items-center">
+            <NavLink to="/ViewAccount" className="flex items-center">
             <span className="mx-2 hover:cursor-pointer text-[17px] transition-all duration-100 font-medium hover:font-bold"> post owner </span>
             </NavLink>
           </div>
