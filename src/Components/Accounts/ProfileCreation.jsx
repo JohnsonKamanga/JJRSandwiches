@@ -1,7 +1,7 @@
 import Footer from "../HomePage/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import BgImage from "./sandwich-1768019_1920.jpg";
+import BgImage from "./image4.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NavBar from "../HomePage/NavBar";
@@ -16,8 +16,11 @@ export default function ProfileCreation() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Username/Email: ${firstName}`);
+    console.log(`firstName: ${firstName}`);
     console.log(`lastName: ${lastName}`);
+    console.log(`Dob: ${dob}`);
+    console.log(`Location: ${location}`);
+    console.log(`Bio: ${bio}`);
     console.log("Navigating to the homepage");
     navigate("/HomePage");
   };

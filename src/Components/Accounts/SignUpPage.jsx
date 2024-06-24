@@ -1,6 +1,6 @@
 import Footer from "../HomePage/Footer";
 import Logo from "../../Logos/logo-white-font-no-background.svg";
-import BgImage from "./sandwich-1768019_1920.jpg";
+import BgImage from "./image1.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -22,8 +22,8 @@ export default function SignUpPage() {
     e.preventDefault();
     console.log(`Username/Email: ${userEmail}`);
     console.log(`password: ${password}`);
-    console.log("Navigating to the homepage");
-    navigate("/AccountPage");
+    console.log("Navigating to the Profile Creation Page");
+    navigate("/ProfileCreation");
   };
 
   return (
@@ -35,14 +35,14 @@ export default function SignUpPage() {
         }}
       >
         <div className="flex flex-col p-5 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
-          <div className="mb-[7%] mt-[3%] sm:my-[5%] lg:my-[2%] xl:my-[1%] p-2 rounded-[18px] w-[90%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[70%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
+          <div className="mb-[7%] mt-[3%] sm:my-[2%] xl:my-[1%] p-2 rounded-[18px] w-[90%] lg:w-[50%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[50%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
             <NavLink to="/HomePage">
               <img src={Logo} alt="logo" />
             </NavLink>
           </div>
 
           <div className="text-center text-white">
-            <h1 className="mb-[7%] lg:mb-[2%] text-2xl md:text-4xl lg:text-5xl font-bold">
+            <h1 className="mb-[7%] md:mb-[4%] lg:mb-[2%] text-2xl md:text-3xl lg:text-5xl font-bold">
               Welcome to JJRSandwiches!
             </h1>
           </div>
@@ -53,7 +53,7 @@ export default function SignUpPage() {
             <form
               id="login"
               onSubmit={handleSubmit}
-              className="flex flex-col justify-center p-2 h-[130%] w-[100%] rounded-[14px] text-sm lg:text-base "
+              className="flex flex-col justify-center p-2 h-[130%] w-[100%] rounded-[14px] text-sm "
             >
               <div className="flex flex-row h-[20%] lg:h-[60px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                 <label

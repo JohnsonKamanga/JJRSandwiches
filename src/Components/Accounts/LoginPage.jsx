@@ -36,7 +36,7 @@ export default function LoginPage() {
               Welcome back to JJRSandwiches!
             </h1>
           </div>
-          <div className="bg-black bg-opacity-50 p-4 rounded-[18px] flex flex-col items-center justify-center text-black">
+          <div className="bg-black bg-opacity-50 p-4 w-[70%] md:w-[50%] lg:w-[40%] rounded-[18px] flex flex-col items-center justify-center text-black">
             <p className="mx-[7%] text-sm lg:text-base text-center text-white">
               Please log in to access your account and join our community of
               sandwich enthusiasts{" "}
