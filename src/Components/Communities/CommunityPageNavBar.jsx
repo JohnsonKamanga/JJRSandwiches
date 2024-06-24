@@ -1,84 +1,129 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong, faCogs, faSearch, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeftLong,
+  faEllipsisV,
+  faSearch,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { wait } from "../../utilities";
 
-export default function CommunityPageNavBar(){
+export default function CommunityPageNavBar() {
   const [dropDownIsOpen, setDropDownIsOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(`You searched: ${searchQuery}`);
-      };
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(`You searched: ${searchQuery}`);
+  };
   return (
-        <div className="mb-5">
-            <div className="flex flex-row p-2 h-[45px] justify-between items-center popup">
-                <div className="bg-white p-1 rounded-full border-[1px] border-black border-opacity-55 ">
-                    <NavLink to="/Communities">
-                    <FontAwesomeIcon icon={faArrowLeftLong}/>
-                    </NavLink>
-                </div>
-                <div className="font-medium text-xl border-[1px] p-1 border-black rounded-[14px]">
-                   Community Name 
-                </div>
-                <div className="p-1 hover:cursor-pointer bg-white rounded-2xl border-[1px] border-black" 
-                onClick={async ()=>{
+    <div className="fixed w-full ">
+      <div className="flex flex-row p-2 h-[45px] justify-between items-center popup">
+        <div className="hover:bg-black hover:bg-opacity-30 p-1 rounded-full hover:cursor-pointer ">
+          <NavLink to="/Communities">
+            <FontAwesomeIcon icon={faArrowLeftLong} />
+          </NavLink>
+        </div>
+        <div className="font-medium text-xl p-1 border-black rounded-[14px]">
+          Community Name/Username
+        </div>
+        <div
+          id="searchBar"
+          className="w-[40%] lg:w-[60%] transition-opacity duration-[200ms] opacity-0 flex flex-row items-center my-2 border-[1px] rounded-xl border-black border-opacity-50 bg-white focus-within:border-opacity-65"
+        >
+          {" "}
+          <div
+            className="relative -left-5 hover:cursor-pointer hover:animate-bounce hidden"
+            id="xIcon"
+            onClick={() => {
+              const dropDown = document.getElementById("searchBar");
+              if (showSearchBar) {
+                dropDown.style.opacity = "0";
+                document.getElementById("xIcon").style.display = "none";
+              } else {
+                dropDown.style.opacity = "1";
+                document.getElementById("xIcon").style.display = "block";
+              }
 
-                    const dropDown = document.getElementById("communityNavBarDropDown");
-                    if(dropDownIsOpen){
-                    dropDown.style.opacity = "0";
-                    await wait(200);
-                    dropDown.style.display = "none";   
-                    }
-                    else{
-                        dropDown.style.display = "block";
-                        await wait(200);
-                        dropDown.style.opacity = "1";
-                    }
-
-                    setDropDownIsOpen(!dropDownIsOpen);
-                }}
-                >
-                    <FontAwesomeIcon icon={faCogs}/>
-                </div>
-                <div id="communityNavBarDropDown" 
-                className="opacity-0 hover:border-opacity-75 hidden w-[95px] text-center transition-opacity duration-[150ms] p-2 popup absolute z-40 border-[1px] border-black border-opacity-35 rounded-xl left-[80%] top-[7%]">
-                <div className="hover:font-medium hover:cursor-pointer">Join</div>
-                <div className="hover:font-medium hover:cursor-pointer">Block</div>
-                <div className="hover:font-medium hover:cursor-pointer">Settings</div>
-                </div>
-            </div>
-            <div className="flex justify-center">
-            <div className="w-[60%] flex flex-row items-center my-2 border-[1px] rounded-xl border-black border-opacity-20 focus-within:border-opacity-65">
-            <form
+              setShowSearchBar(!showSearchBar);
+            }}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </div>
+          <form
             className="flex flex-row items-center w-[100%]"
             onSubmit={handleSubmit}
-            >
-                <input 
-                className=" mx-2 p-1 text-sm w-[85%] sm:w-[90%] md:w-[95%] border-0 border-opacity-0 border-none outline-none "
-                type="text"
-                name="search"
-                placeholder="search"
-                value={searchQuery}
-                onChange={(e) => {
-                    e.preventDefault();
-                    setSearchQuery(e.target.value);
-                  }}
-                >
-
-                </input>
-                <button
-                type="submit"
-                >
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="w-[12px] sm:w-[16px] h-[12px] sm:h-[16px]"
-            />
-                </button>
-            </form>
-            </div>
-            </div>
+          >
+            <input
+              className=" mx-2 p-1 text-sm w-[85%] sm:w-[85%] md:w-[95%] border-0 border-opacity-0 border-none outline-none bg-transparent"
+              type="text"
+              name="search"
+              placeholder="search community..."
+              id="searchField"
+              disabled={
+                !showSearchBar /*controlled by the state variable showSearchBar*/
+              }
+              value={searchQuery}
+              onChange={(e) => {
+                e.preventDefault();
+                setSearchQuery(e.target.value);
+              }}
+            ></input>
+            <button type="submit">
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="w-[12px] sm:w-[16px] h-[12px] sm:h-[16px]"
+              />
+            </button>
+          </form>
         </div>
+
+        <div
+          className="p-1 flex-col hover:cursor-pointer transition-all hover:bg-black hover:bg-opacity-20 rounded-xl"
+          onClick={async () => {
+            const dropDown = document.getElementById("communityNavBarDropDown");
+            if (dropDownIsOpen) {
+              dropDown.style.opacity = "0"; //make element transparent
+              await wait(200); //wait for 200ms as the transition is animated
+              dropDown.style.display = "none"; //make the element disappear completely from the UI
+            } else {
+              dropDown.style.display = "block"; //make the element present on the UI(still invisible at this point
+              await wait(200); //wait for 200ms so that the element is made present on the UI
+              dropDown.style.opacity = "1"; //Make the element visible by changing its opacity to 100%
+            }
+
+            setDropDownIsOpen(!dropDownIsOpen);
+          }}
+        >
+          <FontAwesomeIcon icon={faEllipsisV} />
+        </div>
+        <div
+          id="communityNavBarDropDown"
+          className="opacity-0 hover:border-opacity-75 hidden flex-col w-[95px] text-center transition-opacity duration-[150ms] p-2 popup absolute z-40 border-[1px] border-black border-opacity-35 rounded-xl left-[83%] lg:left-[91.5%] top-[85%]"
+        >
+          <div className="hover:font-medium hover:cursor-pointer">Join</div>
+          <div className="hover:font-medium hover:cursor-pointer">Block</div>
+          <div className="hover:font-medium hover:cursor-pointer">Settings</div>
+          <div
+            className="hover:font-medium hover:cursor-pointer"
+            onClick={() => {
+              const dropDown = document.getElementById("searchBar");
+              if (showSearchBar) {
+                dropDown.style.opacity = "0";
+                document.getElementById("xIcon").style.display = "none";
+              } else {
+                dropDown.style.opacity = "1";
+                document.getElementById("xIcon").style.display = "block";
+              }
+              setShowSearchBar(!showSearchBar);
+            }}
+          >
+            Search
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center"></div>
+    </div>
   );
 }
