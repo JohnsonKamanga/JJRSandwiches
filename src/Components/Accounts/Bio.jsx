@@ -25,14 +25,14 @@ export default function Bio() {
     //navigate("/HomePage");
   };
   return (
-    <div className="min-h-full h-screen">
+    <div>
       <div
-        className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed"
+        className="flex flex-col h-[560px] bg-cover bg-center bg-fixed"
         style={{
           backgroundImage: `url(${BgImage})`,
         }}
       >
-        <div className="flex flex-col p-1 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
+        <div className="flex flex-col p-1 h-[560px] items-center backdrop-blur-[6px] bg-black bg-opacity-35">
           <div className="text-center text-white mt-[2%] lg:mt-0 mb-[1%]">
             <h1 className="p-2 text-2xl md:text-4xl font-bold">
               Update Your Account Info
@@ -41,15 +41,15 @@ export default function Bio() {
               Feel free update ay of the following fields{" "}
             </p>
           </div>
-          <div className="bg-black bg-opacity-50 p-4 h-[80%] w-[80%] sm:w-[70%] md:w-[60%] lg:w-[35%] rounded-[18px] flex flex-col items-center justify-center text-black">
+          <div className="bg-black bg-opacity-50 p-4 h-[75%] w-[80%] sm:w-[88%] md:w-[60%] lg:w-[55%] rounded-[18px] flex flex-col items-center justify-center text-black">
             
             <form
               id="profileCreation"
               onSubmit={handleSubmit}
-              className="flex flex-col justify-center p-2  rounded-[14px] text-sm  "
+              className="flex flex-row p-2  rounded-[14px] text-sm  "
             >
-              <div className="flex flex-col items-center justify-center mb-[3%] ">
-                <div className="h-[120px] lg:h-[150px] w-[120px] lg:w-[150px] flex flex-col justify-center bg-white bg-opacity-20 rounded-full p-2">
+              <div className="flex flex-col mb-[3%] ">
+                <div className="h-[120px] lg:h-[150px] xl:h-[200px] w-[120px] lg:w-[150px] xl:w-[200px] flex flex-col justify-center bg-white bg-opacity-20 rounded-full p-2">
                   <label
                     id="pfp_label"
                     htmlFor="profilePicture"
@@ -89,6 +89,7 @@ export default function Bio() {
                   
                 </div>
               </div>
+              <div className="p-2 pt-5 rounded-[18px] ml-2 bg-black bg-opacity-60 flex flex-col items-center">
               <div className="flex flex-row mb-[2%] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                 <label
                   htmlFor="first_name"
@@ -183,13 +184,14 @@ export default function Bio() {
                   className="bg-transparent p-3 font-light placeholder:text-white   placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-
+              
               <button
                 type="submit"
                 className="bg-black bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
               >
                 Update
               </button>
+              </div>
             </form>
           </div>
         </div>

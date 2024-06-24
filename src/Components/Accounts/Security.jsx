@@ -29,12 +29,12 @@ export default function Security() {
   return (
     <div>
       <div
-        className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed"
+        className="flex flex-col min-h-full h-[90vh] bg-cover bg-center bg-fixed"
         style={{
           backgroundImage: `url(${BgImage})`,
         }}
       >
-        <div className="flex flex-col p-5 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
+        <div className="flex flex-col p-5 items-center min-h-full h-[85vh] backdrop-blur-[6px] bg-black bg-opacity-35">
 
           <div className="text-center text-white">
             <h1 className="mb-[7%] md:mb-[4%] lg:mb-[2%] text-4xl md:text-3xl lg:text-5xl font-bold">
