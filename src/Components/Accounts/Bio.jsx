@@ -2,27 +2,52 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image4.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Logo from "../../Logos/logo-black.png";
+import { UserContext } from "./UserContext";
+import axios from "axios";
 
 export default function Bio() {
-  const [firstName, setFirstName] = useState("Your_First Name");
-  const [lastName, setLastName] = useState("Your_Last name");
-  const [bio, setBio] = useState("Your_Bio");
-  const [location, setLocation] = useState("Your_Location");
-  const [dob, setDob] = useState("2003-03-05");
+  const {currentUserData, setCurrentUserData} = useContext(UserContext);
+  const [firstName, setFirstName] = useState(currentUserData.firstName);
+  const [lastName, setLastName] = useState(currentUserData.lastName);
+  const [bio, setBio] = useState(currentUserData.bio);
+  const [location, setLocation] = useState(currentUserData.location);
+  const [dob, setDob] = useState(currentUserData.dob);
+  const [editable, setEditable] = useState(false);
   const [profilePicture, setProfilePicture] = useState(Logo);
   const navigate = useNavigate();
+  const baseurl = "http://localhost:8000/api";
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`firstName: ${firstName}`);
-    console.log(`lastName: ${lastName}`);
-    console.log(`Dob: ${dob}`);
-    console.log(`Location: ${location}`);
-    console.log(`Bio: ${bio}`);
-    console.log(`Your picture: ${profilePicture}`);
-    console.log("Navigating to the homepage");
-    //navigate("/HomePage");
+    axios.put(`${baseurl}/users/${currentUserData.id}`,{
+      firstName: firstName,
+      lastName: lastName,
+      location: location,
+      dob: dob,
+      bio: bio
+    }).then(()=>{
+      setCurrentUserData({
+        firstName: firstName,
+        lastName: lastName,
+        location: location,
+        dob: dob,
+        bio: bio
+      });
+      console.log(`firstName: ${firstName}`);
+      console.log(`lastName: ${lastName}`);
+      console.log(`Dob: ${dob}`);
+      console.log(`Location: ${location}`);
+      console.log(`Bio: ${bio}`);
+      console.log(`Your picture: ${profilePicture}`);
+      console.log("Navigating to the homepage");
+      //navigate("/HomePage");
+    })
+    .catch((error)=>{
+      console.log(error.message + " : " + error.code);
+      console.log("Unable to update user data");
+    })
+    
   };
   return (
     <div>
@@ -67,6 +92,7 @@ export default function Bio() {
                   <input
                     id="profilePicture"
                     type="file"
+                    disabled = {!editable}
                     accept="image/*"
                     src={profilePicture}
                     onChange={(e) => {
@@ -100,6 +126,7 @@ export default function Bio() {
                 <input
                   type="text"
                   id="first_name"
+                  disabled = {!editable}
                   autoComplete="on"
                   value={firstName}
                   onChange={(e) => {
@@ -119,6 +146,7 @@ export default function Bio() {
                 <input
                   id="last_name"
                   type="text"
+                  disabled = {!editable}
                   autoComplete="on"
                   value={lastName}
                   onChange={(e) => {
@@ -138,6 +166,7 @@ export default function Bio() {
                 <input
                   id="location"
                   type="text"
+                  disabled = {!editable}
                   autoComplete="on"
                   value={location}
                   onChange={(e) => {
@@ -157,6 +186,7 @@ export default function Bio() {
                 <input
                   id="dob"
                   type="date"
+                  disabled = {!editable}
                   autoComplete="on"
                   value={dob}
                   onChange={(e) => {
@@ -175,6 +205,7 @@ export default function Bio() {
                 <input
                   id="favorite_sandwich"
                   type="text"
+                  disabled = {!editable}
                   autoComplete="on"
                   value={bio}
                   onChange={(e) => {
@@ -184,15 +215,26 @@ export default function Bio() {
                   className="bg-transparent p-3 font-light placeholder:text-white   placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              
+              <div className="flex flex-row justify-between">
               <button
+                onClick={(e)=>{
+                  setEditable(!editable);
+                }}
+                className="bg-black bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+              >
+                edit
+              </button>
+              <button
+              disabled = {!editable}
                 type="submit"
                 className="bg-black bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
               >
                 Update
               </button>
               </div>
+              </div>
             </form>
+            
           </div>
         </div>
       </div>
