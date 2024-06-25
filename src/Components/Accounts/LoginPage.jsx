@@ -2,19 +2,41 @@ import Footer from "../HomePage/Footer";
 import Logo from "../../Logos/logo-white-font-no-background.svg";
 import BgImage from "./sandwich-1768019_1920.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
+import { UserContext } from "./UserContext";
 
 export default function LoginPage() {
+  const baseurl = "http://localhost:8000/api";
+  const {setCurrentUserData, setIsSignedIn} = useContext(UserContext);
   const [userNameOrEmail, setUserNameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = axios.post(`${baseurl}/auth/login`,{username: userNameOrEmail, password: password});
+
+    token.then((tokenData)=>{
     console.log(`Username/Email: ${userNameOrEmail}`);
     console.log(`password: ${password}`);
     console.log("Navigating to the homepage");
+    setCurrentUserData(tokenData.data);
+    setIsSignedIn(true);
     navigate("/HomePage");
+    }
+    )
+    .catch((error)=>{
+      const message = error.message + " : " + error.statusCode;
+      console.log(message);
+      const err = document.getElementById("errMsg");
+      setErrorMessage("incorrect password or username");
+      err.style.display = "block";
+      err.style.color = "red";
+    
+    })
+    
   };
   return (
     <div>
@@ -54,13 +76,13 @@ export default function LoginPage() {
                   Username
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   id="user_id"
                   value={userNameOrEmail}
                   onChange={(e) => {
                     setUserNameOrEmail(e.target.value);
                   }}
-                  placeholder="Email or username"
+                  placeholder="Enter your username"
                   className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
@@ -82,7 +104,8 @@ export default function LoginPage() {
                   className="bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div className="flex my-3 text-white font-extralight items-center justify-between">
+              <div id="errMsg" className="hidden mt-1">{errorMessage}</div>
+              <div className="flex my-2 text-white font-extralight items-center justify-between">
                 <div className="flex my-3 items-center justify-center hover:text-[#f87058] transition-all">
                   <label htmlFor="remember_me" className="mr-2">
                     Remember me?
@@ -107,7 +130,13 @@ export default function LoginPage() {
               </div>
               <button
                 type="submit"
-                className="bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                disabled = {userNameOrEmail === "" && password === ""}
+                className={
+                  userNameOrEmail === "" || password === "" ? 
+                  "bg-black bg-opacity-50 p-2 rounded-[18px] font-medium text-white"
+                  :
+                  "bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                }
               >
                 Login
               </button>
