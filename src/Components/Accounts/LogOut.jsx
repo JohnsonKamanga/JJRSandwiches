@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 export default function LogOut(props) {
   const navigate = useNavigate();
-
+  const {setIsSignedIn} = useContext(UserContext);
   const showPopUp = props.showPopUp;
   const setShowPopUp = props.setShowPopUp;
   const handlePopUp = props.handlePopUp;
@@ -16,6 +18,7 @@ export default function LogOut(props) {
         <div
           className="hover:cursor-pointer mx-3 p-3 rounded-[18px] transition-all duration-200 bg-black bg-opacity-50 hover:bg-opacity-75 hover:text-[#f87058] border-[1px] border-black border-opacity-75 "
           onClick={() => {
+            setIsSignedIn(false);
             navigate("/HomePage");
           }}
         >
