@@ -3,12 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image4.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import NavBar from "../HomePage/NavBar";
+import { UserContext } from "./UserContext";
+import axios from "axios";
 
 export default function ProfileCreation() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const {currentUserData, setCurrentUserData} = useContext(UserContext);
+  const baseurl = "http://localhost:8000/api";
+  const user = axios.get(`${baseurl}/users/${currentUserData.username}`);
+  const [firstName, setFirstName] = useState(currentUserData.firstName);
+  const [lastName, setLastName] = useState(currentUserData.lastName);
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
   const [dob, setDob] = useState("");
@@ -16,6 +21,23 @@ export default function ProfileCreation() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
+    const update = axios.put(`${baseurl}/users/${currentUserData.id}`, {
+      firstName: firstName,
+      lastName: lastName,
+      location: location,
+      dob: dob,
+      bio: bio
+    });
+
+    update.then(()=>{
+      setCurrentUserData({...currentUserData, ...{
+        firstName: firstName,
+        lastName: lastName,
+        location: location,
+        dob: dob,
+        bio: bio
+      }});
+      
     console.log(`firstName: ${firstName}`);
     console.log(`lastName: ${lastName}`);
     console.log(`Dob: ${dob}`);
@@ -23,6 +45,13 @@ export default function ProfileCreation() {
     console.log(`Bio: ${bio}`);
     console.log("Navigating to the homepage");
     navigate("/HomePage");
+
+    })
+    .catch((error)=>{
+      console.log(error.message + " : " + error.code);
+      console.log("Unable to update user data");
+    });
+
   };
   return (
     <div className="min-h-full h-screen">
