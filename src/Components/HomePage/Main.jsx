@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BgImage1 from "./pexels-alex-green-5692286.jpg";
 import BgImage2 from "./pexels-anton-porsche-37909-133578.jpg";
 import BgImage3 from "./pexels-brigitte-tohm-36757-350343.jpg";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "../Accounts/UserContext";
 
 export default function Main() {
   const images = [BgImage1, BgImage2, BgImage3];
+
+  const {isSignedIn} = useContext(UserContext);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -43,9 +46,10 @@ export default function Main() {
             elevate your sandwich game to newer heights.
           </p>
         </div>
-        <div className=" rounded-3xl border-[2px] p-2 text-xs md:text-sm text-white hover:cursor-pointer transition-colors duration-300 hover:bg-white hover:bg-opacity-40">
+        {!isSignedIn &&
+        (<div className=" rounded-3xl border-[2px] p-2 text-xs md:text-sm text-white hover:cursor-pointer transition-colors duration-300 hover:bg-white hover:bg-opacity-40">
           <NavLink to="/LoginPage">Join The Community</NavLink>
-        </div>
+        </div>)}
       </div>
     </div>
   );
