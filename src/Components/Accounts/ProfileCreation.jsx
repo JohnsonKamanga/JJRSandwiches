@@ -9,8 +9,11 @@ import { UserContext } from "./UserContext";
 import axios from "axios";
 
 export default function ProfileCreation() {
-  const {currentUserData, setCurrentUserData} = useContext(UserContext);
+  const {currentUserData, currentUserToken, setCurrentUserData} = useContext(UserContext);
   const baseurl = "http://localhost:8000/api";
+  const headers = {
+    'Authorization' : `Bearer ${currentUserToken.data.access_token}`
+  }
   const user = axios.get(`${baseurl}/users/${currentUserData.username}`);
   const [firstName, setFirstName] = useState(currentUserData.firstName);
   const [lastName, setLastName] = useState(currentUserData.lastName);
@@ -27,6 +30,8 @@ export default function ProfileCreation() {
       location: location,
       dob: dob,
       bio: bio
+    }, {
+      headers: headers
     });
 
     update.then(()=>{
@@ -49,6 +54,7 @@ export default function ProfileCreation() {
     })
     .catch((error)=>{
       console.log(error.message + " : " + error.code);
+      console.log(currentUserToken);
       console.log("Unable to update user data");
     });
 
