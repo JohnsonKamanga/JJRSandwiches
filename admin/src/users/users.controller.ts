@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { genSalt, hash } from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
@@ -36,8 +37,15 @@ export class UsersController {
         @Body('bio') bio : string,
         @Body('password') password : string,
         @Body('isActive') isActive : boolean,
-    ){
-           return await this.userService.create({firstName, lastName, username, userEmail, location, dob, bio, password, isActive});
+    ){     
+    
+        //generate password salt
+        const salt = await genSalt(10);
+    
+        //use salt to generate hashed password
+        password = await hash(password, salt);
+
+        return await this.userService.create({firstName, lastName, username, userEmail, location, dob, bio, password, isActive});
     }
 
     @UseGuards(AuthGuard)
