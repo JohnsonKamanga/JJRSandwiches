@@ -1,20 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Instruction } from "../instruction/instruction.entity";
-import { Ingredient } from "../ingredient/ingredient.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Instruction } from '../instruction/instruction.entity';
+import { Ingredient } from '../ingredient/ingredient.entity';
 @Entity()
-export class Recipe{
-    @PrimaryGeneratedColumn()
-    id: number;
-    
-    @Column()
-    name: string;
+export class Recipe {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    estimatedPreparationTime: string;
+  @Column({default: ''})
+  name: string;
 
-    @OneToMany(type => Instruction, instruction => instruction.instruction )
-    instructions: Instruction[];
+  @Column({default: ''})
+  estimatedPreparationTime: string;
 
-    @OneToMany(type => Ingredient, ingredient => ingredient.ingredient )
-    ingredients: Ingredient[];
+  @OneToMany((type) => Instruction, (instruction) => instruction.recipe)
+  instructions: Instruction[];
+
+  @OneToMany((type) => Ingredient, (ingredient) => ingredient.recipe)
+  ingredients: Ingredient[];
 }
