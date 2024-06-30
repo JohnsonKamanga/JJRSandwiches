@@ -1,14 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image4.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import Logo from "../../Logos/logo-black.png";
 import { UserContext } from "./UserContext";
 import axios from "axios";
+import { wait } from "../../utilities";
 
 export default function Bio() {
-  const {currentUserData, setCurrentUserData} = useContext(UserContext);
+  const {currentUserToken, currentUserData,userID, userName, setCurrentUserData} = useContext(UserContext);
+  const baseurl = "http://localhost:8000/api";
+  const headers = {
+    'Authorization' : `Bearer ${currentUserToken.data.access_token}`
+  }
   const [firstName, setFirstName] = useState(currentUserData.firstName);
   const [lastName, setLastName] = useState(currentUserData.lastName);
   const [bio, setBio] = useState(currentUserData.bio);
@@ -17,15 +22,20 @@ export default function Bio() {
   const [editable, setEditable] = useState(false);
   const [profilePicture, setProfilePicture] = useState(Logo);
   const navigate = useNavigate();
-  const baseurl = "http://localhost:8000/api";
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`${baseurl}/users/${currentUserData.id}`,{
+    setEditable(!editable);
+    document.getElementById("submit").style.display = "none";
+    document.getElementById("loading").style.display = "flex";
+    console.log("Submitting info...");
+    axios.put(`${baseurl}/users/${userID}`,{
       firstName: firstName,
       lastName: lastName,
       location: location,
       dob: dob,
       bio: bio
+    }, {
+      headers: headers,
     }).then(()=>{
       setCurrentUserData({
         firstName: firstName,
@@ -34,20 +44,17 @@ export default function Bio() {
         dob: dob,
         bio: bio
       });
-      console.log(`firstName: ${firstName}`);
-      console.log(`lastName: ${lastName}`);
-      console.log(`Dob: ${dob}`);
-      console.log(`Location: ${location}`);
-      console.log(`Bio: ${bio}`);
-      console.log(`Your picture: ${profilePicture}`);
-      console.log("Navigating to the homepage");
-      //navigate("/HomePage");
+      console.log("User info updated successfully....");
     })
     .catch((error)=>{
-      console.log(error.message + " : " + error.code);
-      console.log("Unable to update user data");
+      console.error(error);
+      console.log("Unable to update user data...");
+      document.getElementById("error_message").style.display = "block";
+      document.getElementById("error_message").style.color = "red";
     })
-    
+    wait(10000);
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("edit").style.display = "block";
   };
   return (
     <div>
@@ -63,7 +70,7 @@ export default function Bio() {
               Update Your Account Info
             </h1>
             <p className="mx-[7%] mb-[3%] mt-[1.5%] text-sm lg:text-base text-center text-white">
-              Feel free update ay of the following fields{" "}
+              Feel free update any of the following fields{" "}
             </p>
           </div>
           <div className="bg-black bg-opacity-50 p-4 h-[75%] w-[80%] sm:w-[88%] md:w-[60%] lg:w-[55%] rounded-[18px] flex flex-col items-center justify-center text-black">
@@ -71,7 +78,7 @@ export default function Bio() {
             <form
               id="profileCreation"
               onSubmit={handleSubmit}
-              className="flex flex-row p-2  rounded-[14px] text-sm  "
+               className="flex flex-row p-2  rounded-[14px] text-sm  "
             >
               <div className="flex flex-col mb-[3%] ">
                 <div className="h-[120px] lg:h-[150px] xl:h-[200px] w-[120px] lg:w-[150px] xl:w-[200px] flex flex-col justify-center bg-white bg-opacity-20 rounded-full p-2">
@@ -215,23 +222,33 @@ export default function Bio() {
                   className="bg-transparent p-3 font-light placeholder:text-white   placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div className="flex flex-row justify-between">
-              <button
+              <div className="flex flex-row justify-between hover:cursor-pointer">
+              <div
+              id="edit"
                 onClick={(e)=>{
                   setEditable(!editable);
+                  document.getElementById("edit").style.display = "none";
+                  document.getElementById("submit").style.display = "block";
                 }}
-                className="bg-black bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                className="bg-black block bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
               >
                 edit
-              </button>
+              </div>
               <button
+              id="submit"
               disabled = {!editable}
                 type="submit"
-                className="bg-black bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                className="bg-black hidden bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
               >
                 Update
               </button>
+              <div 
+              id="loading"
+              className="justify-center hidden items-center bg-black bg-opacity-70 mb-[2%] w-16 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white">
+              <FontAwesomeIcon icon={faSpinner} className=" animate-spin"/>
               </div>
+              </div>
+              <div id="error_message" className="hidden">unable to update use</div>
               </div>
             </form>
             
