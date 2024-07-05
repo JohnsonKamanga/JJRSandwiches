@@ -1,34 +1,38 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image4.jpg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Logo from "../../Logos/logo-black.png";
-import { UserContext } from "./UserContext";
 import axios from "axios";
 import { wait } from "../../utilities";
 
+const tokenString = sessionStorage.getItem('token');
+const token = JSON.parse(tokenString);
+const decodedToken = (await axios.post("http://localhost:8000/api/auth/decode",{access_token: token?.data.access_token})).data
+let user = (await axios.get(`http://localhost:8000/api/users/${decodedToken?.username}`)).data;
+function setUser(newUser){
+  user = newUser;
+}
+
 export default function Bio() {
-  const {currentUserToken, currentUserData,userID, userName, setCurrentUserData} = useContext(UserContext);
   const baseurl = "http://localhost:8000/api";
   const headers = {
-    'Authorization' : `Bearer ${currentUserToken.data.access_token}`
+    'Authorization' : `Bearer ${token.data.access_token}`
   }
-  const [firstName, setFirstName] = useState(currentUserData.firstName);
-  const [lastName, setLastName] = useState(currentUserData.lastName);
-  const [bio, setBio] = useState(currentUserData.bio);
-  const [location, setLocation] = useState(currentUserData.location);
-  const [dob, setDob] = useState(currentUserData.dob);
+  const [firstName, setFirstName] = useState(user?.firstName);
+  const [lastName, setLastName] = useState(user?.lastName);
+  const [bio, setBio] = useState(user?.bio);
+  const [location, setLocation] = useState(user?.location);
+  const [dob, setDob] = useState(user?.dob);
   const [editable, setEditable] = useState(false);
   const [profilePicture, setProfilePicture] = useState(Logo);
-  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     setEditable(!editable);
     document.getElementById("submit").style.display = "none";
     document.getElementById("loading").style.display = "flex";
     console.log("Submitting info...");
-    axios.put(`${baseurl}/users/${userID}`,{
+    axios.put(`${baseurl}/users/${decodedToken.sub}`,{
       firstName: firstName,
       lastName: lastName,
       location: location,
@@ -37,7 +41,7 @@ export default function Bio() {
     }, {
       headers: headers,
     }).then(()=>{
-      setCurrentUserData({
+      setUser({
         firstName: firstName,
         lastName: lastName,
         location: location,

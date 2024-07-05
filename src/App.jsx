@@ -1,12 +1,10 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes.jsx";
 import { UserContext } from "./Components/Accounts/UserContext.jsx";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import useToken from "./Components/Accounts/Tokens.js";
 
 function App() {
-  const baseurl = "http://localhost:8000/api";
   const [currentUserData, setCurrentUserData] = useState({});
   const {token, setToken} = useToken();
   const [isSignedIn, setIsSignedIn] = useState(token ? true: false);
