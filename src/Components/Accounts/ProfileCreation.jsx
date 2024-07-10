@@ -1,22 +1,25 @@
 import Footer from "../HomePage/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image4.jpg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import NavBar from "../HomePage/NavBar";
-import { UserContext } from "./UserContext";
 import axios from "axios";
+import { UserContext } from "./UserContext";
 
 export default function ProfileCreation() {
-  const {currentUserData, currentUserToken, setCurrentUserData} = useContext(UserContext);
+  const { token, setUserID, setUserName } = useContext(UserContext);
+  const [decodedToken, setDecodedToken] = useState();
   const baseurl = "http://localhost:8000/api";
   const headers = {
-    'Authorization' : `Bearer ${currentUserToken.data.access_token}`
-  }
-  const user = axios.get(`${baseurl}/users/${currentUserData.username}`);
-  const [firstName, setFirstName] = useState(currentUserData.firstName);
-  const [lastName, setLastName] = useState(currentUserData.lastName);
+    Authorization: `Bearer ${token?.data?.access_token}`,
+  };
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
   const [dob, setDob] = useState("");
@@ -24,41 +27,93 @@ export default function ProfileCreation() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const update = axios.put(`${baseurl}/users/${currentUserData.id}`, {
-      firstName: firstName,
-      lastName: lastName,
-      location: location,
-      dob: dob,
-      bio: bio
-    }, {
-      headers: headers
-    });
-
-    update.then(()=>{
-      setCurrentUserData({...currentUserData, ...{
+    const update = axios.put(
+      `${baseurl}/users/${decodedToken?.sub}`,
+      {
         firstName: firstName,
         lastName: lastName,
         location: location,
         dob: dob,
-        bio: bio
-      }});
-      
-    console.log(`firstName: ${firstName}`);
-    console.log(`lastName: ${lastName}`);
-    console.log(`Dob: ${dob}`);
-    console.log(`Location: ${location}`);
-    console.log(`Bio: ${bio}`);
-    console.log("Navigating to the homepage");
-    navigate("/HomePage");
+        bio: bio,
+      },
+      {
+        headers: headers,
+      }
+    );
 
-    })
-    .catch((error)=>{
-      console.log(error.message + " : " + error.code);
-      console.log(currentUserToken);
-      console.log("Unable to update user data");
-    });
-
+    update
+      .then(() => {
+        setUserID(decodedToken.sub);
+        setUserName(decodedToken.username);
+        console.log("Navigating to the homepage");
+        axios.get(`${baseurl}/users/${decodedToken.username}`).then((user) => {
+          for (const key in user.data) {
+            console.log(`${key} : ${user.data[key]}`);
+          }
+        });
+        navigate("/HomePage");
+      })
+      .catch((error) => {
+        console.log(error.message + " : " + error.code);
+        console.log("Unable to update user data");
+      });
   };
+
+  const decodeToken = () => {
+    document.getElementById("loadingScreen").style.color = 'black';
+    axios
+      .post(`${baseurl}/auth/decode`, {
+        access_token: token?.data?.access_token,
+      })
+      .then((dToken) => {
+        setDecodedToken(dToken.data);
+        setLoading(false);
+        setError(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        document.getElementById("loadingScreen").style.color = 'red';
+        setErrorMessage("An error ocurred, please refresh the page");
+        setError(true);
+      });
+  };
+
+  useEffect(() => {
+    decodeToken();
+    return () => {};
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-full h-screen">
+        <NavBar />
+        <div
+          className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: `url(${BgImage})`,
+          }}
+        >
+          <div
+            className="flex flex-col p-1 min-h-full h-screen items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35"
+            id="loadingScreen"
+          >
+            {error ? (
+              errorMessage
+            ) : (
+              <div>
+                <FontAwesomeIcon
+                  className="text-7xl animate-spin"
+                  icon={faSpinner}
+                />
+                <div>Loading...</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-full h-screen">
       <NavBar />
@@ -78,7 +133,6 @@ export default function ProfileCreation() {
             </p>
           </div>
           <div className="bg-black bg-opacity-50 p-4 h-[80%] w-[80%] sm:w-[70%] md:w-[60%] lg:w-[35%] rounded-[18px] flex flex-col items-center justify-center text-black">
-            
             <form
               id="profileCreation"
               onSubmit={handleSubmit}
@@ -92,12 +146,18 @@ export default function ProfileCreation() {
                     className="flex flex-col justify-center hover:cursor-pointer font-thin text-opacity-70 text-white"
                   >
                     <img
-                    id="pfp"
-                    alt="profile picture"
-                    className=" items-center rounded-full hidden"
-                  />
-                    <FontAwesomeIcon id="addPicture" icon={faPlus} className="block"/>
-                    <p id="text_addPicture" className="block text-center">add picture</p>
+                      id="pfp"
+                      alt="profile picture"
+                      className=" items-center rounded-full hidden"
+                    />
+                    <FontAwesomeIcon
+                      id="addPicture"
+                      icon={faPlus}
+                      className="block"
+                    />
+                    <p id="text_addPicture" className="block text-center">
+                      add picture
+                    </p>
                   </label>
 
                   <input
@@ -106,11 +166,13 @@ export default function ProfileCreation() {
                     accept="image/*"
                     src={profilePicture}
                     onChange={(e) => {
-                      document.getElementById("addPicture").style.display = "none";
-                      document.getElementById("text_addPicture").style.display = "none";
-                      
+                      document.getElementById("addPicture").style.display =
+                        "none";
+                      document.getElementById("text_addPicture").style.display =
+                        "none";
+
                       const preview = document.getElementById("pfp");
-                        preview.style.display = "block";
+                      preview.style.display = "block";
                       const reader = new FileReader();
                       reader.onload = () => {
                         preview.src = reader.result;
@@ -121,9 +183,7 @@ export default function ProfileCreation() {
                     className="hidden"
                   ></input>
                 </div>
-                <div className="flex flex-row p-1 items-center text-center">
-                  
-                </div>
+                <div className="flex flex-row p-1 items-center text-center"></div>
               </div>
               <div className="flex flex-row mb-[2%] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                 <label
