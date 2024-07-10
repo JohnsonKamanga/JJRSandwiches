@@ -7,7 +7,7 @@ import axios from "axios";
 import { UserContext } from "./UserContext";
 
 export default function SignUpPage() {
-  const { setIsSignedIn, setCurrentUserToken, setCurrentUserData } =
+  const { setIsSignedIn, setToken, setCurrentUserData } =
     useContext(UserContext);
   const baseurl = "http://localhost:8000/api";
   const [userEmail, setUserEmail] = useState("");
@@ -41,7 +41,7 @@ export default function SignUpPage() {
         username: username,
         password: password,
       });
-      setCurrentUserToken(token);
+      setToken(token);
       setCurrentUserData(user.data);
       setIsSignedIn(true);
       console.log(`Email: ${userEmail}`);
@@ -106,7 +106,7 @@ export default function SignUpPage() {
                     } else if (validationVariables.isEmailValid) {
                       setDisplayMessages({
                         ...displayMessages,
-                        email: "Email is valid"
+                        email: "Email is valid",
                       });
                       document.getElementById("email_validation").style.color =
                         "green";
@@ -116,7 +116,7 @@ export default function SignUpPage() {
                     } else {
                       setDisplayMessages({
                         ...displayMessages,
-                        email: "Email is not valid"
+                        email: "Email is not valid",
                       });
                       document.getElementById("email_validation").style.color =
                         "red";
@@ -217,17 +217,18 @@ export default function SignUpPage() {
                       document.getElementById(
                         "password_confirmation"
                       ).style.opacity = "0";
-                    }
-                      else if(confirmPassword.length > 0 && e.target.value === ""){
-                        document.getElementById(
-                          "password_validation"
-                        ).style.opacity = "0";
-                        setDisplayMessages({
-                          ...displayMessages,
-                          confirmPassword: "passwords must be equal"
-                        })
-                      }
-                    else if (e.target.value.length < 6) {
+                    } else if (
+                      confirmPassword.length > 0 &&
+                      e.target.value === ""
+                    ) {
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "0";
+                      setDisplayMessages({
+                        ...displayMessages,
+                        confirmPassword: "passwords must be equal",
+                      });
+                    } else if (e.target.value.length < 6) {
                       document.getElementById(
                         "password_validation"
                       ).style.color = "red";
