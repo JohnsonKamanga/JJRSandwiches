@@ -8,28 +8,29 @@ import { UserContext } from "./UserContext";
 
 export default function LoginPage() {
   const baseurl = "http://localhost:8000/api";
-  const {setCurrentUserData, setIsSignedIn} = useContext(UserContext);
+  const {setCurrentUserData,setUserID, setUserName, token, setToken, setIsSignedIn} = useContext(UserContext);
   const [userNameOrEmail, setUserNameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = axios.post(`${baseurl}/auth/login`,{username: userNameOrEmail, password: password});
 
-    token.then((tokenData)=>{
-    console.log(`Username/Email: ${userNameOrEmail}`);
-    console.log(`password: ${password}`);
-    console.log("Navigating to the homepage");
-    setCurrentUserData(tokenData.data);
+    token.then(async (tokenData)=>{
+    console.log("Sign in successful. Navigating to the homepage...");
+    setCurrentUserData((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data);
+    setUserID((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data.id);
+    setUserName((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data.username);
+    setToken(tokenData);
     setIsSignedIn(true);
     navigate("/HomePage");
     }
     )
     .catch((error)=>{
-      const message = error.message + " : " + error.statusCode;
-      console.log(message);
+      console.error(error);
       const err = document.getElementById("errMsg");
       setErrorMessage("incorrect password or username");
       err.style.display = "block";
@@ -86,7 +87,8 @@ export default function LoginPage() {
                   className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div className="flex flex-row items-center h-[20%] lg:h-[60px] bg-white bg-opacity-20 rounded-[18px]">
+              <div className="flex flex-col my-3 h-[20%] lg:h-[60px] rounded-[18px]">
+              <div className="flex flex-row items-center h-[80%] lg:h-[60px] bg-white bg-opacity-20 rounded-[18px]">
                 <label
                   htmlFor="user_password"
                   className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
@@ -94,15 +96,49 @@ export default function LoginPage() {
                   Password
                 </label>
                 <input
-                  id="user_password"
+                  id="hidden_user_password"
                   type="password"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
                   placeholder="Enter your password"
-                  className="bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                  className="block bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
+                 <input
+                  id="displayed_user_password"
+                  type="text"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  placeholder="Enter your password"
+                  className="hidden bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                ></input> 
+              </div>
+              <div className="flex items-center text-white hover:text-[#f87058] transition-all">
+                  <label htmlFor="show_password" className="mr-2 p-2">
+                    Show password
+                  </label>
+                  <input
+                    id="show_password"
+                    type="checkbox"
+                    onClick={() => {
+                      const hidden_password = document.getElementById("hidden_user_password");
+                      const displayed_password = document.getElementById("displayed_user_password")
+                      if(!showPassword){
+                        hidden_password.style.display = "none";
+                        displayed_password.style.display = "block";
+
+                      }
+                      else{
+                        hidden_password.style.display = "block";
+                        displayed_password.style.display = "none";
+                      }
+                      setShowPassword(!showPassword);
+                    }}
+                  ></input>
+                </div>
               </div>
               <div id="errMsg" className="hidden mt-1">{errorMessage}</div>
               <div className="flex my-2 text-white font-extralight items-center justify-between">
