@@ -7,7 +7,7 @@ import { Instruction } from 'src/instruction/instruction.entity';
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
 
-  @Get()
+  @Get('all')
   async findAllRecipes() {
     return await this.recipeService.findAll();
   }
@@ -17,9 +17,16 @@ export class RecipeController {
     return await this.recipeService.findOne(id);
   }
 
+
+  @Get()
+  async findRecipeByUser(@Body('user') user) {
+    return await this.recipeService.findOneByUser(user);
+  }
+
   @Post()
   async createRecipe(
     @Body('id') id,
+    @Body('user') user,
     @Body('name') name: string,
     @Body('estimatedPreparationTime') estimatedPreparationTime : string,
     @Body('ingredients') ingredients: Ingredient[],
@@ -27,6 +34,7 @@ export class RecipeController {
   ){
     return await this.recipeService.create({
         id:id,
+        user:user,
         name:name,
         estimatedPreparationTime: estimatedPreparationTime,
         ingredients:ingredients,

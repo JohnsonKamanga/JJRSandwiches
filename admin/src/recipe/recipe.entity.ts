@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Instruction } from '../instruction/instruction.entity';
 import { Ingredient } from '../ingredient/ingredient.entity';
+import { User } from 'src/users/user.entity';
 @Entity()
 export class Recipe {
   @PrimaryGeneratedColumn()
@@ -11,6 +12,9 @@ export class Recipe {
 
   @Column({default: ''})
   estimatedPreparationTime: string;
+
+  @ManyToOne((type) => User, (user) => user.recipes)
+  user: User;
 
   @OneToMany((type) => Instruction, (instruction) => instruction.recipe)
   instructions: Instruction[];

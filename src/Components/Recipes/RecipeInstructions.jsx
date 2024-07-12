@@ -5,7 +5,9 @@ import { Ingredient } from "./Ingredients";
 import Image1 from "./image4.jpg";
 import BgImage from "./image5.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftLong, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ingredients = [
   new Ingredient("Genoa salami", "3 slices"),
@@ -38,36 +40,59 @@ const instructions = [
   "Serve immediately and enjoy your classic Italian sub sandwich!",
 ];
 
-const myRecipe = new Recipe(
+/*const myRecipe = new Recipe(
   "Classic Italian Sub Sandwich",
   Image1,
   ingredients,
   "15 minutes",
   instructions
-);
+);*/
 
-export default function RecipeInstructions() {
+export default function RecipeInstructions(props) {
+  const baseurl = 'http://localhost:8000/api';
+  const setDisplayIndex = props.setDisplayIndex;
+  const chosenRecipe = props.chosenRecipe;
+  const [myRecipe, setMyRecipe] = useState();
+
+  useEffect(()=>{
+    axios.get(`${baseurl}/recipes/${chosenRecipe?.id}`)
+    .then((rec)=>{
+      setMyRecipe(rec.data);
+    })
+    .catch((err)=>{
+      console.log(`an error was encountered`);
+      console.error(err);
+    })
+  },[])
   return (
     <div className="min-h-full h-screen">
       <NavBar />
       <div
         className="bg-center bg-cover"
         style={{
-          backgroundImage: `url(${myRecipe.image})`,
+          backgroundImage: `url(${myRecipe?.image})`,
         }}
       >
-        <div className=" backdrop-blur-[6px] text-white">
-          <div className="p-[2%]">
+        <div className=" backdrop-blur-[6px] ">
+          <div className="p-[2%] flex flex-row justify-center items-center">
+            <div
+            className="hover:cursor-pointer"
+            onClick={()=>{
+              setDisplayIndex(0);
+            }}
+            ><FontAwesomeIcon icon={faArrowLeftLong} /></div>
+            <div className="p-[2%]">
             <h1 className="font-bold text-center text-xl lg:text-3xl">
-              {myRecipe.name}
+              {myRecipe?.name}
             </h1>
-            <p className="text-center text-lg">By anonymous...</p>
+            <p className="text-center text-lg">{myRecipe?.user?.username}</p>
+          </div>
           </div>
           <div className="flex flex-col md:flex-row-reverse mx-1 text-center text-white">
             <div className="mb-[5%] md:ml-[4%] md:mb-[2%] grid grid-rows-[235px] grid-cols-2 md:grid-cols-1 md:grid-rows-[auto_300px] w-full md:w-[50%] p-1 font-thin">
               <div className="p-3 mr-[3%] rounded-[18px] bg-black bg-opacity-25">
                 <img src={Image1} className="rounded-[16px]" />
-                <p className="text-base md:text-lg">My {myRecipe.name}</p>
+                <p className="text-base md:text-lg">My {myRecipe?.name}</p>
               </div>
               <div
                 id="ingredients"
@@ -77,16 +102,15 @@ export default function RecipeInstructions() {
                   Ingredients
                 </p>
                 <div className="text-white rounded-[18px] bg-black bg-opacity-50">
-                  {myRecipe.ingredients.map((ingredient) => {
+                  {myRecipe?.ingredients.map((ingredient) => {
                     return (
                       <div
-                        key={ingredient.name}
+                        key={ingredient?.ingredient}
                         className="p-3 flex flex-row text-xs md:text-sm border-b-[1px] border-black border-opacity-50"
                       >
                         <div className="font-[400] mr-1 text-end w-[40%]">
-                          {ingredient.name}:
+                          {ingredient?.ingredient}:
                         </div>
-                        <div>{ingredient.quantity}</div>
                       </div>
                     );
                   })}
@@ -99,16 +123,16 @@ export default function RecipeInstructions() {
             >
               <p className="font-medium mb-2 text-lg">Instructions</p>
               <div className="p-3 font-thin rounded-[16px] text-white bg-black bg-opacity-50 mx-2">
-                {myRecipe.instructions.map((instruction) => {
+                {myRecipe?.instructions.map((instruction) => {
                   return (
                     <div
-                      key={instruction}
+                      key={instruction.instruction}
                       className="p-2 text-sm md:text-lg text-start"
                     >
                       <span className="font-medium">
                         {myRecipe.instructions.indexOf(instruction) + 1}
                       </span>
-                      : {instruction}
+                      : {instruction.instruction}
                     </div>
                   );
                 })}

@@ -29,6 +29,25 @@ export class RecipeService {
         id: id,
       },
       relations: {
+        user:true,
+        ingredients: true,
+        instructions: true,
+      },
+    });
+  }
+
+  async findOneByUser(user): Promise<Recipe | null> {
+    return await this.recipeRepository.findOne({
+      select: {
+        id: true,
+        name: true
+      },
+
+      where: {
+        user: user,
+      },
+      relations: {
+        user: true,
         ingredients: true,
         instructions: true,
       },
