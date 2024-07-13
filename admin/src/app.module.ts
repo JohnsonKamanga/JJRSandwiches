@@ -8,6 +8,8 @@ import { User } from './users/user.entity';
 import { IngredientsModule } from './ingredient/ingredient.module';
 import { InstructionsModule } from './instruction/instruction.module';
 import { AuthModule } from './auth/auth.module';
+import { CommunitiesModule } from './communities/communities.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { AuthModule } from './auth/auth.module';
     }),
 
     AuthModule,
+
+    CommunitiesModule,
+
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,9 +2,23 @@ import Footer from "../HomePage/Footer";
 import Logo from "../../Logos/logo-white-font-no-background.svg";
 import BgImage from "./image1.jpg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "./UserContext";
+import axios from "axios";
+
+/*const tokenString = sessionStorage.getItem('token');
+const token = JSON.parse(tokenString);
+const decodedToken = (await axios.post("http://localhost:8000/api/auth/decode",{access_token: token?.data?.access_token})).data
+let user = (await axios.get(`http://localhost:8000/api/users/${decodedToken?.username}`)).data;
+function setUser(newUser){
+  user = newUser;
+}*/
 
 export default function Security() {
+  const baseurl = "http://localhost:8000/api";
+  const headers = {
+    'Authorization' : `Bearer ${token?.data.access_token}`
+  }
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationVariables, setValidationVariables] = useState({
@@ -18,12 +32,17 @@ export default function Security() {
     confirmPassword: "default",
   });
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await axios.put(`${baseurl}/users/${decodedToken.sub}`,{
+      userEmail: userEmail,
+      password: password
+    }, {
+      headers: headers,
+    }) 
     console.log(`Username/Email: ${userEmail}`);
     console.log(`password: ${password}`);
     console.log("Navigating to the Profile Creation Page");
-    navigate("/ProfileCreation");
   };
 
   return (

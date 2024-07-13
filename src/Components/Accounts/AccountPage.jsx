@@ -1,13 +1,16 @@
 import NavBar from "../HomePage/NavBar";
 import Footer from "../HomePage/Footer";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Bio from "./Bio";
 import Security from "./Security";
 import Privacy from "./Privacy";
 import LogOut from "./LogOut";
+import { UserContext } from "./UserContext";
+import { NavLink } from "react-router-dom";
 
 export default function AccountPage() {
   const [showPopUp, setShowPopUp] = useState(false);
+  const {isSignedIn} = useContext(UserContext);
 
   const handlePopUp = ()=>{
     if(showPopUp){
@@ -47,6 +50,8 @@ export default function AccountPage() {
       </div>
     )
   }
+
+  if(isSignedIn)
   return (
     <div>
     <div className="flex flex-col min-h-full h-screen">
@@ -70,4 +75,21 @@ export default function AccountPage() {
     </div>
     </div>
   );
+
+  else 
+      return(
+        <div className="flex flex-col min-h-full h-screen justify-center items-center">
+          <div>you must login first to update account details</div>
+          <div className="flex flex-row">
+          <NavLink to="/LoginPage">
+          <button className="mx-1 bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+          >
+            Sign In</button></NavLink>
+          <NavLink to="/HomePage">
+          <button className="mx-1 bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white">
+            Go Back</button>
+            </NavLink>
+          </div>
+        </div>
+      )
 }
