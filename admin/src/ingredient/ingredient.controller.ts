@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { IngredientsService } from './ingredient.service';
 
-@Controller()
+@Controller('ingredients')
 export class IngredientsController {
   constructor(private ingredientsService: IngredientsService) {}
 
