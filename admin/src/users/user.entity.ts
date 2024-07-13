@@ -1,5 +1,6 @@
+import { Community } from "src/communities/community.entity";
 import { Recipe } from "src/recipe/recipe.entity";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from "typeorm";
 
 @Entity()
 export class User{
@@ -38,4 +39,7 @@ export class User{
 
     @OneToMany((type)=> Recipe, (recipe)=> recipe.user)
     recipes: Recipe[];
+
+    @ManyToMany(()=>Community, (community)=> community.members)
+    communities: Community[]
 }
