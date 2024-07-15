@@ -1,5 +1,8 @@
+import { Comment } from "src/comment/comment.entity";
 import { Community } from "src/communities/community.entity";
+import { Post } from "src/posts/post.entity";
 import { Recipe } from "src/recipe/recipe.entity";
+import { SubComment } from "src/sub-comment/sub-comment.entity";
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from "typeorm";
 
 @Entity()
@@ -41,5 +44,14 @@ export class User{
     recipes: Recipe[];
 
     @ManyToMany(()=>Community, (community)=> community.members)
-    communities: Community[]
+    communities: Community[];
+
+    @OneToMany(()=> Post, (post)=>{post.user})
+    posts: Post[];
+
+    @OneToMany(()=>Comment, (comment)=>{comment.user})
+    comments: Comment[];
+
+    @OneToMany(()=>SubComment, (subComment)=>{subComment.user})
+    subcomments: SubComment[];
 }
