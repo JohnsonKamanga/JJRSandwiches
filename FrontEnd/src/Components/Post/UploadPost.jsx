@@ -6,9 +6,9 @@ import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSpinner, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Recipe } from "../Recipes/Recipe";
+import { baseurl } from "../../routes";
 
 export default function UploadPost() {
-  const baseurl = "http://localhost:8000/api";
   const { token } = useContext(UserContext);
   const [decodedToken, setDecodedToken] = useState();
   const [name, setName] = useState("");

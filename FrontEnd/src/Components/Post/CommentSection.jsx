@@ -1,87 +1,46 @@
+import { useContext, useEffect, useState } from "react";
 import CommentTextarea from "./CommentTextarea";
 import Comments from "./Comments";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../Accounts/UserContext";
+import { baseurl } from "../../routes";
 
-const avaiableComments = [
-    {
-      Comment: "comment1",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment1-subcomment1",
-          "comment1-subcomment2",
-          "comment1-subcomment3",
-          "comment1subcomment4",
-        ],
-      },
-    },
-    {
-      Comment: "comment2",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment2-subcomment1",
-          "comment2-subcomment2",
-          "comment2-subcomment3",
-          "comment2-subcomment4",
-        ],
-      },
-    },
-    {
-      Comment: "comment3",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment3-subcomment1",
-          "comment3-subcomment2",
-          "comment3-subcomment3",
-          "comment3-subcomment4",
-        ],
-      },
-    },
-    {
-      Comment: "comment4",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment4-subcomment1",
-          "comment4-subcomment2",
-          "comment4-subcomment3",
-          "comment4-subcomment4",
-        ],
-      },
-    },
-    {
-      Comment: "comment5",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment5-subcomment1",
-          "comment5-subcomment2",
-          "comment5-subcomment3",
-          "comment5-subcomment4",
-        ],
-      },
-    },
-    {
-      Comment: "comment6",
-      subComments: {
-        visible: false,
-        subcomments: [
-          "comment6-subcomment1",
-          "comment6-subcomment2",
-          "comment6-subcomment3",
-          "comment6-subcomment4",
-        ],
-      },
-    },
-  ];
+export default function CommentSection(props) {
+  const post = props.post;
+  const {token} = useContext(UserContext);
+  const [decodedToken, setDecodedToken] = useState();
+  const [rendering, setRendering] = useState(true);
+  const [comments, setComments] = useState([]);
+  const [textArea, setTextArea] = useState('');
 
-export default function CommentSection() {
+  useEffect(()=>{
+    axios.post(`${baseurl}/auth/decode`,{access_token: token.data.access_token})
+    .then((dToken)=>{
+      setDecodedToken(dToken.data);
+    });
+    const unsubscribe = ()=>{
+    axios.get(`${baseurl}/comments/post/${post.id}`)
+    .then((com)=>{
+        setComments(com.data);
+        setRendering(false);
+    })}
+
+    return ()=>unsubscribe();
+  },[comments]);
+  if(rendering){
+    return(
+      <div>
+        <FontAwesomeIcon icon={faSpinner} className=" animate-spin"/>
+      </div>
+    )
+  }
   return (
     <div className="p-1 overflow-y-scroll">
       <div className="p-1 text-lg font-medium">Comment Section</div>
-      <Comments avaiableComments={avaiableComments} />
-      <CommentTextarea />
+      <Comments token = {decodedToken} setTextArea = {setTextArea} comments={comments}/>
+      <CommentTextarea textArea={textArea} setTextArea={setTextArea} token = {decodedToken} post = {post}/>
     </div>
   );
 }

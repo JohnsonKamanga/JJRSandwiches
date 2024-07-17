@@ -6,10 +6,10 @@ import Logo from "../../Logos/logo-black.png";
 import axios from "axios";
 import { wait } from "../../utilities";
 import { UserContext } from "./UserContext";
+import { baseurl } from "../../routes";
 
 export default function Bio() {
   const { token } = useContext(UserContext);
-  const baseurl = "http://localhost:8000/api";
   const headers = {
     Authorization: `Bearer ${token?.data.access_token}`,
   };
@@ -75,7 +75,7 @@ export default function Bio() {
       .then((dToken) => {
         setDecodedToken(dToken.data);
         axios
-          .get(`http://localhost:8000/api/users/${dToken?.data?.username}`)
+          .get(`${baseurl}/users/${dToken?.data?.username}`)
           .then((userData) => {
             setUser(userData.data);
             setFirstName(userData?.data?.firstName);

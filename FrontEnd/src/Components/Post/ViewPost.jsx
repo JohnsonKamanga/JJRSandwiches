@@ -6,7 +6,11 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import MiniAccountTab from "../Accounts/MiniAccountTab";
 import PostOptionsBar from "./PostOptionsBar";
 import Comments from "./Comments";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { UserContext } from "../Accounts/UserContext";
+import axios from "axios";
+import { baseurl } from "../../routes";
 
 const myComments = [
   {
@@ -82,20 +86,11 @@ const myComments = [
     },
   },
 ];
-const post =
-  "JJRSandwiches is a platform for appreciating sandwiches. You can post recipes," +
-  " communicate with other users in communities as you appreciate sandwiches." +
-  " It is already quite clear from my nitial statement that we will repuire multiple frameworks for the backend of the web app" +
-  " for the messaging/commenting in communities i will use nodeJS due to its asychronous nature eg it is nonblocking" +
-  ". Other options for this include Erlang, Elixir. They are options but there will be a learning curve. Websocket is " +
-  "involved in this part of the application. Websocket is an a protocol that uses tcp ";
-"to establish a connection and then maintains the same connection until one of the " +
-  "communicating devices terminates the connection. It is used in the client-server communication setup" +
-  "As for keeping track of recipes and user data, i plan on usig django with restful framework." +
-  ". Since a restful api will be used, HTTP will be the protocol for these parts of the app" +
-  ". These will be intergrated into the system using microservices architecture.";
 
 export default function ViewPost() {
+  const post = useLoaderData();
+  const {token} = useContext(UserContext);
+  const [decodedToken, setDecodedToken] = useState();
   const [windowsize, setWindowSize] = useState(window.innerWidth);
   useEffect(() => {
     window.addEventListener("resize", () => setWindowSize(window.innerWidth));
@@ -103,24 +98,33 @@ export default function ViewPost() {
       console.log("removing resize listener");
     });
   }, [windowsize]);
+
+  useEffect(()=>{
+    axios.post(`${baseurl}/auth/decode`,{access_token: token?.data?.access_token})
+         .then((dToken)=>{
+          setDecodedToken(dToken.data);
+         })
+         .catch(()=>alert('an error occured while decoding the token'));
+  },[]);
+
   return (
     <div>
       <div className="min-h-full h-screen">
         <NavBar />
         <div className="min-h-full h-screen flex flex-col md:flex-row">
           <div id="post" className="md:w-[65%] mt-[35px] md:mt-1 p-2 relative">
-            <div className="font-[350]">{post}</div>
-            <PostOptionsBar />
-            <CommentSection/>
+            <div className="font-[350]">{post.content}</div>
+            <PostOptionsBar token = {decodedToken} post = {post} />
+            <CommentSection post = {post}/>
           </div>
           <div
             id="sidebar"
             className="md:w-[35%] p-1 border-l-[1px] border-black border-opacity-40"
           >
-            <MiniAccountTab />
+            <MiniAccountTab post={post}/>
             {(windowsize >= 768)&&(<div>
-            <div className="text-xl font-medium"> Trending Comments</div>
-            <Comments avaiableComments={myComments}/>
+            <div className="text-xl font-medium">
+               Other user details</div>
             </div>)}
           </div>
         </div>

@@ -7,11 +7,11 @@ import { useContext, useEffect, useState } from "react";
 import NavBar from "../HomePage/NavBar";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import { baseurl } from "../../routes";
 
 export default function ProfileCreation() {
   const { token, setUserID, setUserName } = useContext(UserContext);
   const [decodedToken, setDecodedToken] = useState();
-  const baseurl = "http://localhost:8000/api";
   const headers = {
     Authorization: `Bearer ${token?.data?.access_token}`,
   };

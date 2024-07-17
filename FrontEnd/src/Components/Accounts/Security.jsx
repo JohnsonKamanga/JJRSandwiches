@@ -5,17 +5,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-
-/*const tokenString = sessionStorage.getItem('token');
-const token = JSON.parse(tokenString);
-const decodedToken = (await axios.post("http://localhost:8000/api/auth/decode",{access_token: token?.data?.access_token})).data
-let user = (await axios.get(`http://localhost:8000/api/users/${decodedToken?.username}`)).data;
-function setUser(newUser){
-  user = newUser;
-}*/
+import { baseurl } from "../../routes";
 
 export default function Security() {
-  const baseurl = "http://localhost:8000/api";
   const headers = {
     'Authorization' : `Bearer ${token?.data.access_token}`
   }

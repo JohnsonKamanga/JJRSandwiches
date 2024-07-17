@@ -5,11 +5,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import { baseurl } from "../../routes";
 
 export default function SignUpPage() {
   const { setIsSignedIn, setToken, setCurrentUserData } =
     useContext(UserContext);
-  const baseurl = "http://localhost:8000/api";
   const [userEmail, setUserEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

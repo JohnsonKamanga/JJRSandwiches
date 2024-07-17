@@ -13,7 +13,9 @@ import ViewPost from "./Components/Post/ViewPost";
 import ViewAccount from "./Components/Accounts/ViewAccount";
 import SignUpPage from "./Components/Accounts/SignUpPage";
 import AccountPage from "./Components/Accounts/AccountPage";
+import axios from "axios";
 
+export const baseurl = 'http://localhost:8000/api';
 
 export const router = createBrowserRouter([
   {
@@ -41,8 +43,11 @@ export const router = createBrowserRouter([
     element: <UploadPost />,
   },
   {
-    path: "/RecipeInstructions",
+    path: "/Recipes/recipe-instructions/:recipeId",
     element: <RecipeInstructions />,
+    loader: async({params})=>{
+      return (await axios.get(`${baseurl}/recipes/${params.recipeId}`)).data
+    }
   },
   {
     path: "/Communities",
@@ -56,12 +61,20 @@ export const router = createBrowserRouter([
     path: "/ProfileCreation",
     element: <ProfileCreation />,
   },{
-    path: "/CommunityPage",
-    element: <CommunityPage/>
+    path: "/communities/CommunityPage/:communityId",
+    element: <CommunityPage/>,
+    loader: async({params})=>{
+      const posts = (await axios.get(`${baseurl}/posts/community/${params.communityId}`)).data;
+      const community = (await axios.get(`${baseurl}/communities/${params.communityId}`)).data;
+      return [posts, community];
+    }
   },
   {
-    path: "/ViewPost",
-    element: <ViewPost/>
+    path: "/communities/CommunityPage/:communityId/Posts/:postId",
+    element: <ViewPost/>,
+    loader: async({params})=>{
+      return (await axios.get(`${baseurl}/posts/${params.postId}`)).data;
+    }
   },
   {
     path: "/ViewAccount",

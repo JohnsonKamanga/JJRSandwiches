@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,15 +8,35 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { wait } from "../../utilities";
+import axios from "axios";
+import { UserContext } from "../Accounts/UserContext";
+import { baseurl } from "../../routes";
 
-export default function CommunityPageNavBar() {
+export default function CommunityPageNavBar(props) {
+  const { token } = useContext(UserContext);
   const [dropDownIsOpen, setDropDownIsOpen] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const community = props?.community;
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(`You searched: ${searchQuery}`);
   };
+  const addUser = (e) => {
+    axios
+      .post(`${baseurl}/auth/decode`, { access_token: token.data.access_token })
+      .then(async (decodedToken) => {
+        await axios.put(`${baseurl}/communities/members/${community.id}`, {
+          userid: decodedToken?.data?.sub,
+          username: decodedToken?.data?.username,
+        });
+        console.log("User added successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <div className="fixed w-full ">
       <div className="flex flex-row p-2 h-[45px] justify-between items-center popup">
@@ -26,7 +46,7 @@ export default function CommunityPageNavBar() {
           </NavLink>
         </div>
         <div className="font-medium text-xl p-1 border-black rounded-[14px]">
-          Community Name/Username
+          {community?.name}
         </div>
         <div
           id="searchBar"
@@ -102,8 +122,13 @@ export default function CommunityPageNavBar() {
           id="communityNavBarDropDown"
           className="opacity-0 hover:border-opacity-75 hidden flex-col w-[95px] text-center transition-opacity duration-[150ms] p-2 popup absolute z-40 border-[1px] border-black border-opacity-35 rounded-xl left-[83%] lg:left-[91.5%] top-[85%]"
         >
-          <div className="hover:font-medium hover:cursor-pointer">Join</div>
-          <div className="hover:font-medium hover:cursor-pointer">Block</div>
+          <div
+            className="hover:font-medium hover:cursor-pointer"
+            onClick={addUser}
+          >
+            Join
+          </div>
+          <div className="hover:font-medium hover:cursor-pointer">info</div>
           <div className="hover:font-medium hover:cursor-pointer">Settings</div>
           <div
             className="hover:font-medium hover:cursor-pointer"

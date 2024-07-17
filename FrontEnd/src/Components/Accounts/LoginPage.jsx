@@ -5,9 +5,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import { baseurl } from "../../routes";
 
 export default function LoginPage() {
-  const baseurl = "http://localhost:8000/api";
   const {setCurrentUserData,setUserID, setUserName, token, setToken, setIsSignedIn} = useContext(UserContext);
   const [userNameOrEmail, setUserNameOrEmail] = useState("");
   const [password, setPassword] = useState("");

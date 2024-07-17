@@ -1,9 +1,11 @@
 import { faArrowLeftLong, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-export default function MiniAccountTab() {
+export default function MiniAccountTab(props) {
+  const post = props.post;
+  const navigate = useNavigate();
   const [windowsize, setWindowSize] = useState(window.innerWidth);
   useEffect(() => {
     window.addEventListener("resize", () => setWindowSize(window.innerWidth));
@@ -15,13 +17,15 @@ export default function MiniAccountTab() {
     return (
       <div>
         <div className="transition-all duration-200 flex flex-row items-center absolute md:static top-[7.5%] w-[98%] text-xl ">
-        <NavLink to="/CommunityPage">
+        <div
+        onClick={()=>{navigate(-1)}}
+        >
         <FontAwesomeIcon icon={faArrowLeftLong} className="mr-1 text-lg hover:bg-black transition-all duration-150 bg-opacity-0 hover:bg-opacity-40 rounded-full p-2 hover:cursor-pointer"/>
-        </NavLink>
+        </div>
           <div className="flex items-center p-2 font-extralight rounded-[20px]">
             <FontAwesomeIcon icon={faUserCircle} className="text-xl" />
             <NavLink to="/ViewAccount" className="flex items-center">
-            <span className="mx-2 hover:cursor-pointer text-[17px] transition-all duration-100 font-medium hover:font-bold"> post owner </span>
+            <span className="mx-2 hover:cursor-pointer text-[17px] transition-all duration-100 font-medium hover:font-bold"> {post?.user?.username} </span>
             </NavLink>
           </div>
         </div>
@@ -36,7 +40,7 @@ export default function MiniAccountTab() {
           profile picture
         </div>
         <div className="text-2xl text-white hover:font-medium">
-          <NavLink to="/AccountPage">Post Owner</NavLink>
+          <NavLink to="/AccountPage">{post?.user?.username}</NavLink>
         </div>
       </div>
     </div>
