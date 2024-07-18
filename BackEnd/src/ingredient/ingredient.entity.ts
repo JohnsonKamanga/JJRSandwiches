@@ -6,8 +6,11 @@ export class Ingredient {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  ingredient: string;
+  @Column({default:'', type: "text"})
+  name: string;
+
+  @Column({default:'', type: "text"})
+  quantity: string;
 
   @ManyToOne(() => Recipe, (recipe) => recipe.ingredients, {
     onDelete: 'CASCADE'
