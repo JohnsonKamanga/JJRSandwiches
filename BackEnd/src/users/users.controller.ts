@@ -1,7 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { genSalt, hash } from 'bcrypt';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { readFileSync } from 'fs';
+import { diskStorage } from 'multer';
+import { Readable } from 'stream';
+import { Response } from 'express';
+import { extname } from 'node:path/posix';
 
 @Controller('users')
 export class UsersController {
@@ -20,6 +26,19 @@ export class UsersController {
         return await this.userService.findOne(username);
     }
 
+    @Get('profile-picture/:username')
+    async getProfilePicture(@Param('username')username: string, @Res()res : Response ){
+        const user = await this.userService.findOne(username);
+        if(user.profilePicture !== ''){
+        const file = readFileSync(user.profilePicture);
+        const stream = new Readable();
+        stream.push(file);
+        stream.push(null);
+        stream.pipe(res);
+        }
+        return;
+    }
+
     @Delete(':id')
     async removeUser(@Param('id')id : number){
 
@@ -27,41 +46,42 @@ export class UsersController {
     }
 
     @Post()
+    @UseInterceptors(FileInterceptor('profilePicture',{
+        storage:diskStorage({
+            filename:(req,file,cb)=>{
+                cb(null,Date.now() + extname(file.originalname));
+            },
+            destination:"src/uploads/profile-pictures"
+        })
+    }))
     async createUser(
-        @Body('firstName') firstName : string,
-        @Body('lastName') lastName : string,
-        @Body('username') username : string,
-        @Body('userEmail') userEmail : string,
-        @Body('location') location : string,
-        @Body('dob') dob : string,
-        @Body('bio') bio : string,
-        @Body('password') password : string,
-        @Body('isActive') isActive : boolean,
+        @UploadedFile()file: Express.Multer.File, @Req() request: Request
     ){     
     
         //generate password salt
         const salt = await genSalt(10);
     
         //use salt to generate hashed password
-        password = await hash(password, salt);
+        const password = await hash(request.body['password'], salt);
 
-        return await this.userService.create({firstName, lastName, username, userEmail, location, dob, bio, password, isActive});
+        return await this.userService.create({...request.body, password, profilePicture: file?.path});
     }
 
     @UseGuards(AuthGuard)
+    @UseInterceptors(FileInterceptor('profilePicture',{
+        storage:diskStorage({
+            filename:(req,file,callback)=>{
+                callback(null,Date.now() + extname(file.originalname));
+            },
+            destination:"src/uploads/profile-pictures"
+        })
+    }))
     @Put(':id')
     async update(
+        @UploadedFile()file: Express.Multer.File,
         @Param('id') id: number,
-        @Body('firstName') firstName : string,
-        @Body('lastName') lastName : string,
-        @Body('username') username : string,
-        @Body('userEmail') userEmail : string,
-        @Body('location') location : string,
-        @Body('dob') dob : string,
-        @Body('bio') bio : string,
-        @Body('password') password : string,
-        @Body('isActive') isActive : boolean,
+        @Req() request: Request
     ){
-        return this.userService.update(id, {firstName, lastName, username, userEmail, location, dob, bio, password, isActive});
+        return this.userService.update(id, {...request.body, profilePicture:file?.path});
     }
 }
