@@ -1,7 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Ingredient } from 'src/ingredient/ingredient.entity';
 import { Instruction } from 'src/instruction/instruction.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'node:path/posix';
+import { readFileSync } from 'node:fs';
+import { Readable } from 'node:stream';
+import { Response } from 'express';
+import { identity } from 'rxjs';
 
 @Controller('recipes')
 export class RecipeController {
@@ -23,23 +30,49 @@ export class RecipeController {
     return await this.recipeService.findOneByUser(user);
   }
 
+  @Get('recipe-pictures/:id')
+    async getProfilePicture(@Param('id')id, @Res()res : Response ){
+        const recipe = await this.recipeService.findOne(id);
+        if(recipe.image !== ''){
+        const file = readFileSync(recipe.image);
+        const stream = new Readable();
+        stream.push(file);
+        stream.push(null);
+        stream.pipe(res);
+        }
+        return;
+    }
+
   @Post()
-  async createRecipe(
-    @Body('id') id,
-    @Body('user') user,
-    @Body('name') name: string,
-    @Body('estimatedPreparationTime') estimatedPreparationTime : string,
-    @Body('ingredients') ingredients: Ingredient[],
-    @Body('instructions') instructions: Instruction[],
-  ){
-    return await this.recipeService.create({
-        id:id,
-        user:user,
-        name:name,
-        estimatedPreparationTime: estimatedPreparationTime,
-        ingredients:ingredients,
-        instructions:instructions
+  @UseInterceptors(FileInterceptor('image',{
+    storage:diskStorage({
+        filename:(req,file,cb)=>{
+            cb(null,Date.now() + extname(file.originalname));
+        },
+        destination:"src/uploads/recipe-pictures"
     })
+}))
+  async createRecipe(
+    @UploadedFile()file: Express.Multer.File, @Req() request: Request
+  ){
+    return await this.recipeService.create({...request.body, image: file?.path});
+  }
+
+  @Put(':id')
+  @UseInterceptors(FileInterceptor('image',{
+   storage:diskStorage({
+    filename:(req,file,cb)=>{
+      cb(null,Date.now() + extname(file.originalname));
+    },
+    destination:"src/uploads/recipe-pictures"
+   }),
+  }))
+  async update(@UploadedFile()file: Express.Multer.File, @Param('id')id, @Req() request: Request){
+    if(file.originalname === '' ){
+      return await this.recipeService.update(id, request.body);
+    }
+
+    return await this.recipeService.update(id, {...request.body, image: file.path})
   }
 
   @Delete()

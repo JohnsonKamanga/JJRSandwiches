@@ -16,6 +16,9 @@ export class Recipe {
   @ManyToOne((type) => User, (user) => user.recipes)
   user: User;
 
+  @Column({default: ''})
+  image: string;
+
   @OneToMany((type) => Instruction, (instruction) => instruction.recipe)
   instructions: Instruction[];
 

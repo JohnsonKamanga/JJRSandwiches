@@ -20,11 +20,6 @@ export class RecipeService {
 
   async findOne(id): Promise<Recipe | null> {
     return await this.recipeRepository.findOne({
-      select: {
-        id: true,
-        name: true
-      },
-
       where: {
         id: id,
       },
@@ -69,6 +64,10 @@ export class RecipeService {
         ingredients: ingredients,
         instructions: instructions
     };
+  }
+
+  async update(id, body): Promise<any>{
+    return await this.recipeRepository.update(id,body)
   }
 
   async delete(id): Promise<any>{
