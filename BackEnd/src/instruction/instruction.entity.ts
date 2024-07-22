@@ -6,7 +6,7 @@ export class Instruction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({default:'', type: "text"})
   instruction: string;
 
   @ManyToOne(() => Recipe, (recipe) => recipe.instructions, {
