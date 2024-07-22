@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -10,9 +10,19 @@ export class PostsController {
         return await this.postsServices.findAll();
     }
 
+    @Get('community/search')
+    async findByQuery(@Query('id')id?,@Query('query')query?: string){
+        return await this.postsServices.findByQuery(id,query);
+    }
+
     @Get(':id')
     async findPost(@Param('id')id){
         return await this.postsServices.findOneByID(id);
+    }
+
+    @Get('community/:id')
+    async findCommunityPosts(@Param('id')id){
+        return await this.postsServices.findByCommunity({id});
     }
 
     @Get('user/:id')
@@ -34,8 +44,9 @@ export class PostsController {
     async updatePost(
         @Param('id')id,
         @Body('content')content,
+        @Body('likes')likes:number,
     ){
-        return await this.postsServices.updatePost(id,{content});
+        return await this.postsServices.updatePost(id,{content,likes});
     }
 
     @Delete(':id')

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from 'src/users/user.entity';
 
@@ -23,6 +23,29 @@ export class PostsService {
             relations:{
                 user:true,
                 community:true
+            }
+        })
+    }
+
+    async findByQuery(id,query): Promise<Post[]>{
+        return await this.postsRepository.find({
+            where:{   
+                    communityId:id,
+                    content: ILike(`%${query}%`)
+                },
+            relations:{
+                user:true
+            }
+        })
+    }
+
+    async findByCommunity(community): Promise<Post[] | null>{
+        return await this.postsRepository.find({
+            where:{
+                community: community,
+            },
+            relations:{
+                user:true
             }
         })
     }
