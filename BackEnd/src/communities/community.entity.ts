@@ -17,6 +17,9 @@ export class Community {
     @CreateDateColumn({ type: "timestamp", default: ()=> "CURRENT_TIMESTAMP(6)"})
     createdAt: Date;
 
+    @Column({default: ''})
+    communityPicture: string;
+
     @ManyToMany(()=> User, (user)=> user.communities, {
         cascade: true,
     })
