@@ -25,7 +25,9 @@ export class Comment {
     @UpdateDateColumn()
     editedAt: Date;
 
-    @ManyToOne(()=>Post)
+    @ManyToOne(()=>Post,{
+      cascade:true
+    })
     post: Post;
 
     @ManyToOne(()=>User, (user)=>{user.comments})
