@@ -6,13 +6,70 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { wait } from "../../utilities";
 import { useState } from "react";
+import axios from "axios";
+import { baseurl } from "../../routes";
 
-export default function SearchBar() {
+export default function SearchBar(props) {
+  const context = props.context;
+  const setResults = props.setResults;
+  const loadingState = props.loadingState;
+  const setLoadingState = props.setLoadingState;
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`You searched: ${searchQuery}`);
+    setLoadingState(true);
+    if(context === "recipes"){
+      if(searchQuery===''){
+        axios.get(`${baseurl}/recipes/all`)
+        .then((results)=>{
+          console.log(results);
+          setResults(results.data);
+          setLoadingState(false);
+        })
+        .catch((err)=>{
+          console.error(err);
+        }); 
+      }
+    else{  
+    axios.get(`${baseurl}/recipes/search?query=${searchQuery}`)
+    .then((results)=>{
+      console.log(results);
+      setResults(results.data);
+      setLoadingState(false);
+    })
+    .catch((err)=>{
+      console.error(err);
+    });
+  }
+  }
+    else{
+      if(searchQuery===''){
+        axios.get(`${baseurl}/communities`)
+        .then((results)=>{
+          console.log(results);
+          setResults(results.data);
+          setSearchQuery("");
+          setLoadingState(false);
+        })
+        .catch((err)=>{
+          console.error(err);
+        });
+      }
+      else{
+      axios.get(`${baseurl}/communities/search?query=${searchQuery}`)
+    .then((results)=>{
+      console.log(results);
+      setResults(results.data);
+      setSearchQuery("");
+      setLoadingState(false);
+    })
+    .catch((err)=>{
+      console.error(err);
+    });
+  }
+
+    } 
   };
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -25,13 +82,13 @@ export default function SearchBar() {
     <div className="min-w-full h-[15%] md:h-[7%] lg:h-[8%] xl:h-[15%] flex flex-col items-center p-2">
       <div className="w-[60%] flex flex-row items-center mb-2 border-[1px] rounded-xl border-black transition-all duration-200 border-opacity-20 hover:border-opacity-65 focus-within:border-opacity-65">
         <form
-          className="flex flex-row items-center w-[100%]"
+          className="flex flex-row items-center bg-white rounded-xl w-[100%]"
           onSubmit={handleSubmit}
         >
           <input
             type="text"
             name="search"
-            className=" mx-2 p-1 text-sm w-[85%] sm:w-[90%] md:w-[95%] border-0 border-opacity-0 border-none outline-none "
+            className="rounded-l-xl mx-2 p-1 text-sm w-[85%] sm:w-[90%] md:w-[95%] border-0 border-opacity-0 border-none outline-none "
             placeholder="search"
             onChange={(e) => {
               e.preventDefault();
@@ -39,7 +96,9 @@ export default function SearchBar() {
             }}
             value={searchQuery}
           ></input>
-          <button type="submit">
+          <button
+          className="w-[8%]"
+          type="submit">
             {" "}
             <FontAwesomeIcon
               icon={faSearch}
@@ -49,7 +108,7 @@ export default function SearchBar() {
         </form>
       </div>
       <div
-        className="p-1 flex flex-row w-[16%] lg:w-[8%] justify-center items-center rounded-xl border-black border-opacity-25 transition-all duration-200 hover:border-opacity-65 border-[1px] hover:cursor-pointer focus:border-opacity-65 relative"
+        className="p-1 bg-white flex flex-row w-[16%] lg:w-[8%] justify-center items-center rounded-xl border-black border-opacity-25 transition-all duration-200 hover:border-opacity-65 border-[1px] hover:cursor-pointer focus:border-opacity-65 relative"
         onClick={async () => {
           const drop = document.getElementById("popup");
           if (showPopUp === false) {

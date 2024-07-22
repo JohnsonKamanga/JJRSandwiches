@@ -70,6 +70,19 @@ export const router = createBrowserRouter([
     }
   },
   {
+    path: "/communities/CommunityPage/:communityId/search",
+    element: <CommunityPage/>,
+    loader: async({params,request})=>{
+      const  searchQuery = (new URL(request.url)).searchParams.get("query");
+      const community = (await axios.get(`${baseurl}/communities/${params.communityId}`)).data;
+      
+     const posts= searchQuery!=='' ?
+         (await axios.get(`${baseurl}/posts/community/search?id=${params.communityId}&query=${searchQuery}`)).data
+      : (await axios.get(`${baseurl}/posts/community/${params.communityId}`)).data;
+      return [posts, community];
+      }
+  },
+  {
     path: "/communities/CommunityPage/:communityId/Posts/:postId",
     element: <ViewPost/>,
     loader: async({params})=>{

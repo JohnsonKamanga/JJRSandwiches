@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeftLong,
@@ -14,14 +14,15 @@ import { baseurl } from "../../routes";
 
 export default function CommunityPageNavBar(props) {
   const { token } = useContext(UserContext);
+  const navigate = useNavigate();
   const [dropDownIsOpen, setDropDownIsOpen] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const community = props?.community;
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`You searched: ${searchQuery}`);
-  };
+    navigate(`/communities/CommunityPage/${community.id}/search?query=${searchQuery}`);
+    };
   const addUser = (e) => {
     axios
       .post(`${baseurl}/auth/decode`, { access_token: token.data.access_token })
@@ -37,13 +38,26 @@ export default function CommunityPageNavBar(props) {
       });
   };
 
+  const getImage = (community)=>{
+    axios.get(`${baseurl}/communities/community-pictures/${community.id}`,{
+      responseType: "blob"
+    })
+    .then((pic)=>{
+      document.getElementById(`${community.id}`).src= URL.createObjectURL(pic.data);
+    })
+    .catch((err)=>console.error(err));
+  }
+
   return (
-    <div className="fixed w-full ">
-      <div className="flex flex-row p-2 h-[45px] justify-between items-center popup">
-        <div className="hover:bg-black hover:bg-opacity-30 p-1 rounded-full hover:cursor-pointer ">
+    <div className="w-full relative">
+      <div className="flex flex-row p-2 h-[45px] justify-between items-center bg-black bg-opacity-65 text-white">
+        <div className="hover:bg-white w-8 h-8 flex items-center justify-center hover:bg-opacity-30 p-1 rounded-full hover:cursor-pointer ">
           <NavLink to="/Communities">
             <FontAwesomeIcon icon={faArrowLeftLong} />
           </NavLink>
+        </div>
+        <div>
+          <img id={community.id} onLoadStart={getImage(community)} alt={community.name} className="h-[37px] ml-2 rounded-full"/>
         </div>
         <div className="font-medium text-xl p-1 border-black rounded-[14px]">
           {community?.name}
@@ -54,7 +68,7 @@ export default function CommunityPageNavBar(props) {
         >
           {" "}
           <div
-            className="relative -left-5 hover:cursor-pointer hover:animate-bounce hidden"
+            className="relative -left-5 hover:cursor-pointer hidden"
             id="xIcon"
             onClick={() => {
               const dropDown = document.getElementById("searchBar");
@@ -72,7 +86,7 @@ export default function CommunityPageNavBar(props) {
             <FontAwesomeIcon icon={faXmark} />
           </div>
           <form
-            className="flex flex-row items-center w-[100%]"
+            className="flex flex-row text-black items-center w-[100%]"
             onSubmit={handleSubmit}
           >
             <input
@@ -100,7 +114,7 @@ export default function CommunityPageNavBar(props) {
         </div>
 
         <div
-          className="p-1 flex-col hover:cursor-pointer transition-all hover:bg-black hover:bg-opacity-20 rounded-xl"
+          className="p-1 flex-col hover:cursor-pointer transition-all hover:bg-white hover:bg-opacity-20 flex items-center justify-center w-8 h-8 rounded-xl"
           onClick={async () => {
             const dropDown = document.getElementById("communityNavBarDropDown");
             if (dropDownIsOpen) {
@@ -120,7 +134,7 @@ export default function CommunityPageNavBar(props) {
         </div>
         <div
           id="communityNavBarDropDown"
-          className="opacity-0 hover:border-opacity-75 hidden flex-col w-[95px] text-center transition-opacity duration-[150ms] p-2 popup absolute z-40 border-[1px] border-black border-opacity-35 rounded-xl left-[83%] lg:left-[91.5%] top-[85%]"
+          className="opacity-0 hover:border-opacity-75 hidden flex-col w-[95px] text-center transition-opacity duration-[150ms] p-2 bg-white text-black absolute z-40 border-[1px] border-black border-opacity-35 rounded-xl left-[83%] lg:left-[91.5%] top-[85%]"
         >
           <div
             className="hover:font-medium hover:cursor-pointer"
