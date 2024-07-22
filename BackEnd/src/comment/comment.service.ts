@@ -32,10 +32,14 @@ export class CommentService {
 
     async findByPost(post): Promise<Comment[]>{
         return this.commentsRepository
-                   .createQueryBuilder()
-                   .relation(Post, "comments")
-                   .of(post)
-                   .loadMany();
+                   .find({
+                    where:{
+                        post:post,
+                    },
+                    relations:{
+                        user:true,
+                    }
+                   });
     }
 
 
