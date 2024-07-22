@@ -16,9 +16,9 @@ export class CommentController {
         return await this.commentServices.findOneByID(id);
     }
     
-    @Get()
-    async findPostComments(@Query('post')post){
-        return await this.commentServices.findByPost(post);
+    @Get('post/:id')
+    async findPostComments(@Param('id')id){
+        return await this.commentServices.findByPost({id});
     }
 
     @Get('subcomments/:id')
