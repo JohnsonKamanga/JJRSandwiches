@@ -1,3 +1,4 @@
+import { truncate } from 'fs';
 import { Comment } from 'src/comment/comment.entity';
 import { Community } from 'src/communities/community.entity';
 import { User } from 'src/users/user.entity';
@@ -28,7 +29,15 @@ export class Post {
   @Column({default: 0})
   likes: number;
 
-  @ManyToOne(()=>Community, (communtiy)=>{communtiy.posts})
+  @Column()
+  communityId:number;
+
+  @Column()
+  userId:number;
+
+  @ManyToOne(()=>Community, (communtiy)=>{communtiy.posts},{
+    cascade:true
+  })
   community: Community;
 
   @ManyToOne(()=>User, (user)=>{user.posts})
