@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Recipe } from './recipe.entity';
 import { IngredientsService } from 'src/ingredient/ingredient.service';
 import { InstructionsService } from 'src/instruction/instruction.service';
@@ -29,6 +29,26 @@ export class RecipeService {
         instructions: true,
       },
     });
+  }
+
+  async findByQuery(query): Promise<Recipe[]>{
+    return await this.recipeRepository.find({
+      where:[
+        {
+          name:ILike(query)
+        },
+        {
+          ingredients:{
+            name:ILike(query)
+          }
+        }
+      ],
+      relations:{
+        user:true,
+        ingredients: true,
+        instructions: true,
+      }
+    })
   }
 
   async findOneByUser(user): Promise<Recipe | null> {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Ingredient } from 'src/ingredient/ingredient.entity';
 import { Instruction } from 'src/instruction/instruction.entity';
@@ -19,29 +19,36 @@ export class RecipeController {
     return await this.recipeService.findAll();
   }
 
-  @Get(':id')
-  async findRecipe(@Param('id') id) {
-    return await this.recipeService.findOne(id);
-  }
-
 
   @Get()
   async findRecipeByUser(@Body('user') user) {
     return await this.recipeService.findOneByUser(user);
   }
 
+  @Get('search')
+  async findQueryResults(@Query('query')query?: string){
+    return await this.recipeService.findByQuery(query);
+  }
+
+
   @Get('recipe-pictures/:id')
     async getProfilePicture(@Param('id')id, @Res()res : Response ){
         const recipe = await this.recipeService.findOne(id);
-        if(recipe.image !== ''){
-        const file = readFileSync(recipe.image);
+        let path = 'src/uploads/recipe-pictures/default-recipe-picture.jpg';
+        if(recipe.image !== '')
+        path = recipe.image;
+        const file = readFileSync(path);
+        res.contentType(`image/${path.split('.').pop()}`);
         const stream = new Readable();
         stream.push(file);
         stream.push(null);
         stream.pipe(res);
-        }
-        return;
     }
+  
+  @Get(':id')
+  async findRecipe(@Param('id') id) {
+    return await this.recipeService.findOne(id);
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('image',{
@@ -75,8 +82,8 @@ export class RecipeController {
     return await this.recipeService.update(id, {...request.body, image: file.path})
   }
 
-  @Delete()
-  async deleteRecipe(@Body('id')id){
+  @Delete(':id')
+  async deleteRecipe(@Param('id')id){
     return await this.recipeService.delete(id);
   }
 }
