@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Community } from './community.entity';
 import { User } from 'src/users/user.entity';
 
@@ -36,6 +36,19 @@ export class CommunitiesService {
         members: false,
       },
     });
+  }
+
+  async findByQuery(query): Promise<Community[]>{
+    return await this.communitiesRepository.find({
+      where:[
+        {
+          name: ILike(query)
+        },
+        {
+          description: ILike(`%${query}%`)
+        }
+      ]
+    })
   }
 
   //find community members
