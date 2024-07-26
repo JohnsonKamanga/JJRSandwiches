@@ -7,7 +7,7 @@ export class Recipe{
     estimatedPreparationTime;
     instructions;
 
-    constructor(name = "", image = "", ingredients = [], time = "", instructions = []){
+    constructor(name = "", image, ingredients = [], time = "", instructions = []){
         this.name = name;
         this.image = image;
         this.ingredients = ingredients;
