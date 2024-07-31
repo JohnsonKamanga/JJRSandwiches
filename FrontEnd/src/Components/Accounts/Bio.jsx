@@ -22,23 +22,24 @@ export default function Bio() {
   const [location, setLocation] = useState(user?.location);
   const [dob, setDob] = useState(user?.dob);
   const [editable, setEditable] = useState(false);
-  const [profilePicture, setProfilePicture] = useState(Logo);
+  const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
   const [decodedToken, setDecodedToken] = useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
     setEditable(!editable);
+    const pic = e.target?.profilePicture?.files[0];
     document.getElementById("submit").style.display = "none";
     document.getElementById("loading").style.display = "flex";
-    console.log("Submitting info...");
     axios
-      .put(
+      .putForm(
         `${baseurl}/users/${decodedToken.sub}`,
         {
-          firstName: firstName,
-          lastName: lastName,
-          location: location,
-          dob: dob,
-          bio: bio,
+          firstName,
+          lastName,
+          location,
+          dob,
+          bio,
+          profilePicture:pic,
         },
         {
           headers: headers,
@@ -51,18 +52,18 @@ export default function Bio() {
           location: location,
           dob: dob,
           bio: bio,
+          profilePicture
         });
-        console.log("User info updated successfully....");
         document.getElementById("loading").style.display = "none";
         document.getElementById("edit").style.display = "block";
       })
       .catch((error) => {
         console.error(error);
-        console.log("Unable to update user data...");
+        alert("Unable to update user data...");
         document.getElementById("error_message").style.display = "block";
         document.getElementById("error_message").style.color = "red";
         document.getElementById("loading").style.display = "none";
-        document.getElementById("submit").style.display = "block";
+        document.getElementById("submit").style.display = "flex";
         setEditable(true);
       });
   };
@@ -83,8 +84,21 @@ export default function Bio() {
             setBio(userData?.data?.bio);
             setDob(userData?.data?.dob);
             setLocation(userData?.data?.location);
+            axios.get(`${baseurl}/users/profile-picture/${dToken?.data?.username}`,
+              {
+                responseType: "blob"
+              }
+            )
+            .then((pfp)=>{
+              const url = URL.createObjectURL(pfp.data)
+              setProfilePicture(url);
             setRendering(false);
-            setError(false);
+            setError(false);})
+            .catch((err)=>{
+              console.error(err);
+              setRendering(false);
+              setError(true);
+            })
           });
       })
       .catch((err) => {
@@ -97,24 +111,18 @@ export default function Bio() {
   //empty dependancy list means useEfect is rendered once
   useEffect(() => {
     initialize();
-    return () => {
-      console.log("data fetching completed");
-    };
   }, []);
 
   if (rendering) {
     return (
-      <div>
+      <div className="bg-black bg-opacity-20 backdrop-blur-[6px] h-screen">
         <div
-          className="flex flex-col h-[560px] bg-cover bg-center bg-fixed"
-          style={{
-            backgroundImage: `url(${BgImage})`,
-          }}
+          className="flex flex-col h-[560px]"
         >
-          <div className="flex flex-col text-black p-1 h-[560px] items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35">
-            <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col text-white p-1 h-[560px] items-center justify-center ">
+            <div className="flex flex-col items-center justify-center h-[200px] w-[200px] rounded-md bg-black bg-opacity-35">
               <FontAwesomeIcon
-                className="text-7xl animate-spin"
+                className="text-3xl animate-spin"
                 icon={faSpinner}
               />
               <div className="text-xl">loading...</div>
@@ -127,16 +135,13 @@ export default function Bio() {
 
   if (error) {
     return (
-      <div>
+      <div className=" backdrop-blur-[6px] h-screen bg-black bg-opacity-20">
         <div
-          className="flex flex-col h-[560px] bg-cover bg-center bg-fixed"
-          style={{
-            backgroundImage: `url(${BgImage})`,
-          }}
+          className="flex flex-col h-[560px]"
         >
-          <div className="flex flex-col text-black p-1 h-[560px] items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35">
-            <div className="flex flex-col items-center justify-center">
-              <div className="text-xl text-red-500">Error encountered</div>
+          <div className="flex flex-col text-black p-1 h-[560px] items-center justify-center">
+            <div className="flex flex-col p-2 rounded-md min-h-[200px] min-w-[200px] items-center justify-center bg-black bg-opacity-35">
+              <div className="text-xl text-[#ff0000]">Error encountered, please try again</div>
             </div>
           </div>
         </div>
@@ -145,14 +150,11 @@ export default function Bio() {
   }
 
   return (
-    <div>
+    <div className=" backdrop-blur-[6px] h-screen">
       <div
-        className="flex flex-col h-[560px] bg-cover bg-center bg-fixed"
-        style={{
-          backgroundImage: `url(${BgImage})`,
-        }}
+        className="flex flex-col h-[560px]" 
       >
-        <div className="flex flex-col p-1 h-[560px] items-center backdrop-blur-[6px] bg-black bg-opacity-35">
+        <div className="flex flex-col p-1 h-[560px] items-center">
           <div className="text-center text-white mt-[2%] lg:mt-0 mb-[1%]">
             <h1 className="p-2 text-2xl md:text-4xl font-bold">
               Update Your Account Info
@@ -161,46 +163,26 @@ export default function Bio() {
               Feel free update any of the following fields{" "}
             </p>
           </div>
-          <div className="bg-black bg-opacity-50 p-4 h-[75%] w-[80%] sm:w-[88%] md:w-[60%] lg:w-[55%] rounded-[18px] flex flex-col items-center justify-center text-black">
+          <div className="bg-black bg-opacity-50 sm:p-4 h-[75%] w-fit  rounded-[18px] flex flex-col items-center justify-center text-black">
             <form
               id="profileCreation"
               onSubmit={handleSubmit}
-              className="flex flex-row p-2  rounded-[14px] text-sm  "
+              className="flex flex-row p-2 rounded-[14px] text-xs sm:text-sm  "
             >
               <div className="flex flex-col mb-[3%] ">
                 <div className="h-[120px] lg:h-[150px] xl:h-[200px] w-[120px] lg:w-[150px] xl:w-[200px] flex flex-col justify-center bg-white bg-opacity-20 rounded-full p-2">
-                  <label
-                    id="pfp_label"
-                    htmlFor="profilePicture"
-                    className="flex flex-col justify-center hover:cursor-pointer font-thin text-opacity-70 text-white"
-                  >
-                    <img
+                <img
                       id="pfp"
                       alt="profile picture"
-                      className=" items-center rounded-full hidden"
+                      src={profilePicture}
+                      className=" items-center h-full rounded-full block"
                     />
-                    <FontAwesomeIcon
-                      id="addPicture"
-                      icon={faPlus}
-                      className="block"
-                    />
-                    <p id="text_addPicture" className="block text-center">
-                      add picture
-                    </p>
-                  </label>
-
                   <input
                     id="profilePicture"
                     type="file"
                     disabled={!editable}
                     accept="image/*"
-                    src={profilePicture}
                     onChange={(e) => {
-                      document.getElementById("addPicture").style.display =
-                        "none";
-                      document.getElementById("text_addPicture").style.display =
-                        "none";
-
                       const preview = document.getElementById("pfp");
                       preview.style.display = "block";
                       const reader = new FileReader();
@@ -208,15 +190,24 @@ export default function Bio() {
                         preview.src = reader.result;
                       };
                       reader.readAsDataURL(e.target.files[0]);
-                      setProfilePicture(preview.src);
+                      setProfilePicture(e.target.files[0]);
                     }}
                     className="hidden"
                   ></input>
                 </div>
-                <div className="flex flex-row p-1 items-center text-center"></div>
+                <div className="flex flex-row p-1 justify-center items-center text-center">
+                <label
+                    aria-disabled={!editable}
+                    id="pfp_label"
+                    htmlFor="profilePicture"
+                    className="flex flex-col transition-all hover:text-[#f87058] aria-disabled:hover:text-white aria-disabled:hover:text-opacity-45 aria-disabled:hover:cursor-default aria-disabled:text-opacity-45 bg-black bg-opacity-65 rounded-2xl p-2 font-medium justify-center hover:cursor-pointer text-white"
+                  >
+                    change
+                  </label>
+                </div>
               </div>
               <div className="p-2 pt-5 rounded-[18px] ml-2 bg-black bg-opacity-60 flex flex-col items-center">
-                <div className="flex flex-row mb-[2%] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
+                <div className="flex flex-row mb-[2%] w-[210px] sm:w-[300px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                   <label
                     htmlFor="first_name"
                     className="w-[120px] font-medium text-white text-end p-2 border-r-[1px]"
@@ -224,6 +215,7 @@ export default function Bio() {
                     First Name
                   </label>
                   <input
+                  name="firstName"
                     type="text"
                     id="first_name"
                     disabled={!editable}
@@ -236,7 +228,7 @@ export default function Bio() {
                     className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                   ></input>
                 </div>
-                <div className="flex flex-row mb-[2%] items-center bg-white bg-opacity-20 rounded-[18px]">
+                <div className="flex flex-row mb-[2%] w-[210px] sm:w-[300px] items-center bg-white bg-opacity-20 rounded-[18px]">
                   <label
                     htmlFor="last_name"
                     className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
@@ -245,6 +237,7 @@ export default function Bio() {
                   </label>
                   <input
                     id="last_name"
+                    name="lastName"
                     type="text"
                     disabled={!editable}
                     autoComplete="on"
@@ -256,7 +249,7 @@ export default function Bio() {
                     className="bg-transparent p-3  font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                   ></input>
                 </div>
-                <div className="flex flex-row mb-[2%] items-center  bg-white bg-opacity-20 rounded-[18px]">
+                <div className="flex flex-row mb-[2%] w-[210px] sm:w-[300px] items-center  bg-white bg-opacity-20 rounded-[18px]">
                   <label
                     htmlFor="location"
                     className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
@@ -265,6 +258,7 @@ export default function Bio() {
                   </label>
                   <input
                     id="location"
+                    name="location"
                     type="text"
                     disabled={!editable}
                     autoComplete="on"
@@ -276,7 +270,7 @@ export default function Bio() {
                     className="bg-transparent p-3 font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                   ></input>
                 </div>
-                <div className="flex flex-row mb-[2%] items-center bg-white bg-opacity-20 rounded-[18px]">
+                <div className="flex flex-row mb-[2%] w-[210px] sm:w-[300px] items-center bg-white bg-opacity-20 rounded-[18px]">
                   <label
                     htmlFor="dob"
                     className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
@@ -285,6 +279,7 @@ export default function Bio() {
                   </label>
                   <input
                     id="dob"
+                    name="dob"
                     type="date"
                     disabled={!editable}
                     autoComplete="on"
@@ -295,7 +290,7 @@ export default function Bio() {
                     className="bg-transparent p-3 font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                   ></input>
                 </div>
-                <div className="flex flex-row mb-[2%] items-center bg-white bg-opacity-20 rounded-[18px]">
+                <div className="flex flex-row mb-[2%] w-[210px] sm:w-[300px] items-center bg-white bg-opacity-20 rounded-[18px]">
                   <label
                     htmlFor="favorite_sandwich"
                     className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
@@ -304,6 +299,7 @@ export default function Bio() {
                   </label>
                   <input
                     id="favorite_sandwich"
+                    name="bio"
                     type="text"
                     disabled={!editable}
                     autoComplete="on"
@@ -321,20 +317,54 @@ export default function Bio() {
                     onClick={(e) => {
                       setEditable(!editable);
                       document.getElementById("edit").style.display = "none";
-                      document.getElementById("submit").style.display = "block";
+                      document.getElementById("submit").style.display = "flex";
                     }}
                     className="bg-black block bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
                   >
                     edit
                   </div>
-                  <button
+                  <div
                     id="submit"
                     disabled={!editable}
-                    type="submit"
-                    className="bg-black hidden bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                    className=" hidden flex-row mb-[2%] text-white"
                   >
-                    Update
-                  </button>
+                    <div
+                    className="bg-black mx-2 bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                    onClick={()=>{
+                      setRendering(true);
+                      axios.get(`${baseurl}/users/${decodedToken?.username}`)
+                      .then((userData) => {
+                        setUser(userData.data);
+                        setFirstName(userData?.data?.firstName);
+                        setLastName(userData?.data?.lastName);
+                        setBio(userData?.data?.bio);
+                        setDob(userData?.data?.dob);
+                        setLocation(userData?.data?.location);
+                        axios.get(`${baseurl}/users/profile-picture/${decodedToken?.username}`,
+                          {
+                            responseType: "blob"
+                          }
+                        )
+                        .then((pfp)=>{
+                          const url = URL.createObjectURL(pfp.data)
+                          setProfilePicture(url);
+                        setRendering(false);
+                        setError(false);})
+                        .catch((err)=>{
+                          console.error(err);
+                          setRendering(false);
+                          setError(true);
+                        })
+                      });
+                      setEditable(false);
+                    }}
+                    >Cancel</div>
+                    <button
+                    type="submit"
+                    disabled={!editable}
+                    className="bg-black mx-2 bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
+                    >Update</button>
+                  </div>
                   <div
                     id="loading"
                     className="justify-center hidden items-center bg-black bg-opacity-70 mb-[2%] w-16 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white"
