@@ -14,6 +14,8 @@ import ViewAccount from "./Components/Accounts/ViewAccount";
 import SignUpPage from "./Components/Accounts/SignUpPage";
 import AccountPage from "./Components/Accounts/AccountPage";
 import axios from "axios";
+import ViewPosts from "./Components/Post/ViewPosts";
+import EditRecipe from "./Components/Recipes/EditRecipe";
 
 export const baseurl = 'http://localhost:8000/api';
 
@@ -98,7 +100,30 @@ export const router = createBrowserRouter([
     element: <SignUpPage/>
   },
   {
-    path: "/AccountPage",
-    element: <AccountPage/>
+    path: "/AccountPage/:pageName",
+    element: <AccountPage/>,
+    loader: ({params})=>{
+      const pageName = params.pageName ;
+      return pageName;
+    }
+  },
+  {
+    path: "/ViewPosts/:userID",
+    element: <ViewPosts/>,
+    loader: async({params})=>{
+      const user = (await axios.get(`${baseurl}/users/user/${params.userID}`)).data;
+      return user;
+    }
+  },
+  {
+    path: "/Recipes/edit-recipe/:recipeID",
+    element: <EditRecipe/>,
+    loader: async({params})=>{
+      const recipe = (await axios.get(`${baseurl}/recipes/${params.recipeID}`)).data;
+      const imageBlob = (await axios.get(`${baseurl}/recipes/recipe-pictures/${params.recipeID}`,{ responseType:"blob",})).data
+      const imageURL = URL.createObjectURL(imageBlob);
+
+      return [recipe, imageURL];
+    }
   }
 ]);
