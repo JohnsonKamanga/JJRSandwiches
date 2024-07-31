@@ -136,15 +136,15 @@ export default function SearchBar(props) {
 
   return (
     <div className="min-w-full h-[15%] md:h-[7%] lg:h-[8%] xl:h-[15%] flex flex-col items-center p-2">
-      <div className="w-[75%] sm:w-[60%] flex flex-row items-center mb-2 border-[1px] rounded-xl border-black transition-all duration-200 border-opacity-20 hover:border-opacity-65 focus-within:border-opacity-65">
+      <div className="w-[75%] sm:w-[60%] flex flex-row items-center my-2 border-[1px] rounded-xl border-black transition-all duration-200 border-opacity-20 hover:border-opacity-65 focus-within:border-opacity-65">
         <form
           className="flex flex-row items-center bg-white rounded-xl w-[100%]"
           onSubmit={handleSubmit}
         >
           <input
-            type="text"
+            type="search"
             name="search"
-            className="rounded-l-xl mx-2 p-1 text-xs sm:text-sm w-[85%] sm:w-[90%] md:w-[95%] border-0 border-opacity-0 border-none outline-none "
+            className="rounded-l-xl mx-2 h-[30px] p-1 text-xs sm:text-sm w-[85%] sm:w-[90%] md:w-[95%] border-0 border-opacity-0 border-none outline-none "
             placeholder="search"
             onChange={(e) => {
               e.preventDefault();
