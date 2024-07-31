@@ -9,38 +9,59 @@ import { baseurl } from "../../routes";
 
 export default function CommentSection(props) {
   const post = props.post;
-  const {token} = useContext(UserContext);
+  const { token } = useContext(UserContext);
   const [decodedToken, setDecodedToken] = useState();
   const [rendering, setRendering] = useState(true);
   const [comments, setComments] = useState([]);
-  const [textArea, setTextArea] = useState('');
-
-  useEffect(()=>{
-    axios.post(`${baseurl}/auth/decode`,{access_token: token.data.access_token})
-    .then((dToken)=>{
-      setDecodedToken(dToken.data);
+  const [textArea, setTextArea] = useState("");
+  const unsubscribe = () => {
+    axios.get(`${baseurl}/comments/post/${post.id}`).then((com) => {
+      setComments(com.data);
+      setRendering(false);
     });
-    const unsubscribe = ()=>{
-    axios.get(`${baseurl}/comments/post/${post.id}`)
-    .then((com)=>{
-        setComments(com.data);
-        setRendering(false);
-    })}
+  };
 
-    return ()=>unsubscribe();
-  },[comments]);
-  if(rendering){
-    return(
+  useEffect(() => {
+    axios
+      .post(`${baseurl}/auth/decode`, {
+        access_token: token?.data?.access_token,
+      })
+      .then((dToken) => {
+        setDecodedToken(dToken.data);
+      })
+      .catch((err) => {
+        alert("could not decode user token, please login in");
+      });
+    unsubscribe();
+  }, []);
+  if (rendering) {
+    return (
       <div>
-        <FontAwesomeIcon icon={faSpinner} className=" animate-spin"/>
+        <div className="p-1 text-lg font-medium">Comment Section</div>
+        <div className="flex items-center justify-center">
+          <FontAwesomeIcon icon={faSpinner} className=" animate-spin" />
+        </div>
       </div>
-    )
+    );
   }
   return (
-    <div className="p-1 overflow-y-scroll">
+    <div className=" overflow-y-scroll">
       <div className="p-1 text-lg font-medium">Comment Section</div>
-      <Comments token = {decodedToken} setTextArea = {setTextArea} comments={comments}/>
-      <CommentTextarea textArea={textArea} setTextArea={setTextArea} token = {decodedToken} post = {post}/>
+      <Comments
+        token={decodedToken}
+        setTextArea={setTextArea}
+        comments={comments}
+      />
+      {token && (
+        <CommentTextarea
+          comments={comments}
+          setComments={setComments}
+          textArea={textArea}
+          setTextArea={setTextArea}
+          token={decodedToken}
+          post={post}
+        />
+      )}
     </div>
   );
 }
