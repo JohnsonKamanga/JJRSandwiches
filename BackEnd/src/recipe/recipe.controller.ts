@@ -25,6 +25,11 @@ export class RecipeController {
     return await this.recipeService.findOneByUser(user);
   }
 
+  @Get('user/:id')
+  async findRecipesByUser(@Param('id')id){
+    return await this.recipeService.findByUser({id});
+  }
+
   @Get('search')
   async findQueryResults(@Query('query')query?: string){
     return await this.recipeService.findByQuery(query);
@@ -75,11 +80,8 @@ export class RecipeController {
    }),
   }))
   async update(@UploadedFile()file: Express.Multer.File, @Param('id')id, @Req() request: Request){
-    if(file.originalname === '' ){
-      return await this.recipeService.update(id, request.body);
-    }
-
-    return await this.recipeService.update(id, {...request.body, image: file.path})
+    
+    return await this.recipeService.update(id, {...request.body, image: file?.path})
   }
 
   @Delete(':id')
