@@ -19,9 +19,13 @@ export class Recipe {
   @Column({default: ''})
   image: string;
 
-  @OneToMany((type) => Instruction, (instruction) => instruction.recipe)
+  @OneToMany((type) => Instruction, (instruction) => instruction.recipe, {
+    cascade: true,
+  })
   instructions: Instruction[];
 
-  @OneToMany((type) => Ingredient, (ingredient) => ingredient.recipe)
+  @OneToMany((type) => Ingredient, (ingredient) => ingredient.recipe,{
+    cascade: true,
+  })
   ingredients: Ingredient[];
 }
