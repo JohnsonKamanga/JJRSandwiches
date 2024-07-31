@@ -214,7 +214,7 @@ export default function FAQ() {
         backgroundImage: `url(${BgImage})`
       }}
       >
-        <div className="flex flex-col items-center p-2 backdrop-blur-[8px] min-h-full h-screen bg-black  bg-opacity-35 text-white border-[1px]">
+        <div className="flex flex-col items-center p-2 backdrop-blur-[8px] min-h-full h-screen bg-black  bg-opacity-35 text-white">
       <div className="mb-[5%] mt-[1%] text-white w-[75%]">
       <h1 className="text-center font-bold text-2xl sm:text-3xl">FAQ</h1>
 
@@ -225,8 +225,6 @@ export default function FAQ() {
         <div className="bg-black  bg-opacity-10 text-white border-[1px] question-tab-transition border-white border-opacity-75 w-full lg:w-[70%] rounded-[18px] overflow-y-auto">
           {sectionQuestionAndAnswers.map(drawSectionQuestionAndAnswers)}
         </div>
-         
-         
          </div>
          </div>
       <Footer />
