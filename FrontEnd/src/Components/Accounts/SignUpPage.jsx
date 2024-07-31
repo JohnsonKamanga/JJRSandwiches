@@ -6,6 +6,8 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "./UserContext";
 import { baseurl } from "../../routes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function SignUpPage() {
   const { setIsSignedIn, setToken, setCurrentUserData } =
@@ -13,8 +15,9 @@ export default function SignUpPage() {
   const [userEmail, setUserEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [validationVariables, setValidationVariables] = useState({
-    isEmailValid: true,
+    isEmailValid: false,
     isPasswordsEqual: false,
     isUsernameValid: false,
   });
@@ -26,9 +29,20 @@ export default function SignUpPage() {
     confirmPassword: "default",
   });
   const navigate = useNavigate();
+  const [display, setDisplay] = useState(
+    <div className="bg-black bg-opacity-50 p-4 w-[300px] h-[300px] sm:w-[400px] rounded-[18px] flex flex-col items-center justify-center">
+      <div className="text-white flex flex-col items-center justify-center">
+        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-3xl" />
+        <div>Loading...</div>
+      </div>
+    </div>
+  );
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_'{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       //create user
       const user = await axios.post(`${baseurl}/users`, {
         userEmail: userEmail,
@@ -44,14 +58,15 @@ export default function SignUpPage() {
       setToken(token);
       setCurrentUserData(user.data);
       setIsSignedIn(true);
-      console.log(`Email: ${userEmail}`);
-      console.log(`Username: ${username}`);
-      console.log(`password: ${password}`);
-      console.log("Navigating to the Profile Creation Page");
+      setLoading(false);
       navigate("/ProfileCreation");
     } catch (error) {
-      console.log(error.message + " : " + error.code);
-      console.log("Unable to create user");
+      console.error(error);
+      setDisplay(
+        <div className="bg-black bg-opacity-50 text-[#ff0000] p-4 w-[300px] h-[300px] sm:w-[400px] rounded-[18px] flex flex-col items-center justify-center">
+          <div>{`Unable to create user./n${error.message} : ${error.code}`}</div>
+        </div>
+      );
     }
   };
 
@@ -64,7 +79,7 @@ export default function SignUpPage() {
         }}
       >
         <div className="flex flex-col p-5 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
-          <div className="mb-[7%] mt-[3%] sm:my-[2%] xl:my-[1%] p-2 rounded-[18px] w-[90%] lg:w-[50%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[50%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
+          <div className="mb-[7%] mt-[3%] sm:my-[2%] lg:my-[2px] xl:my-[0.5%] p-2 rounded-[18px] w-[80%] lg:w-[50%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[50%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
             <NavLink to="/HomePage">
               <img src={Logo} alt="logo" />
             </NavLink>
@@ -75,8 +90,8 @@ export default function SignUpPage() {
               Welcome to JJRSandwiches!
             </h1>
           </div>
-          <div className="bg-black bg-opacity-50 p-4 rounded-[18px] w-[80%] md:w-[70%] lg:w-[50%] flex flex-col items-center justify-center text-black">
-            <p className="mx-[7%] text-sm lg:text-base text-center text-white">
+          <div className="bg-black bg-opacity-50 p-4 rounded-[18px] w-[350px] sm:w-[400px] lg:w-[50%] flex flex-col items-center justify-center text-black">
+            <p className="mx-[7%] text-xs sm:text-sm lg:text-base text-center text-white">
               Create an account and join us now
             </p>
             <form
@@ -84,10 +99,10 @@ export default function SignUpPage() {
               onSubmit={handleSubmit}
               className="flex flex-col justify-center p-2 h-[130%] w-[100%] rounded-[14px] text-sm "
             >
-              <div className="flex flex-row h-[20%] lg:h-[60px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
+              <div className="flex flex-row h-[20%] lg:h-[50px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                 <label
                   htmlFor="user_id"
-                  className="w-[120px] font-medium text-white text-end p-2 border-r-[1px]"
+                  className="w-[160px] font-medium text-white text-end p-2 border-r-[1px]"
                 >
                   Email
                 </label>
@@ -98,6 +113,17 @@ export default function SignUpPage() {
                   onChange={(e) => {
                     setUserEmail(e.target.value);
                     /*logic for checkig email comes here*/
+                    if (e.target.value.match(emailRegex)) {
+                      setValidationVariables({
+                        ...validationVariables,
+                        isEmailValid: true,
+                      });
+                    } else {
+                      setValidationVariables({
+                        ...validationVariables,
+                        isEmailValid: false,
+                      });
+                    }
 
                     if (e.target.value === "") {
                       document.getElementById(
@@ -126,16 +152,16 @@ export default function SignUpPage() {
                     }
                   }}
                   placeholder="Enter your email address"
-                  className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                  className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light h-full p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div id="email_validation" className=" opacity-0 mb-4">
+              <div id="email_validation" className=" opacity-0 mb-2">
                 {displayMessages.email}
               </div>
-              <div className="flex flex-row h-[20%] lg:h-[60px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
+              <div className="flex flex-row h-[20%] lg:h-[50px] items-center rounded-[18px] bg-white bg-opacity-20 border-b-[1px] border-black border-opacity-25">
                 <label
                   htmlFor="username"
-                  className="w-[120px] font-medium text-white text-end p-2 border-r-[1px]"
+                  className="w-[160px] font-medium text-white text-end p-2 border-r-[1px]"
                 >
                   Username
                 </label>
@@ -191,16 +217,16 @@ export default function SignUpPage() {
                     });
                   }}
                   placeholder="Enter your username"
-                  className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                  className="bg-transparent text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 h-full lg:p-[17px] hover:bg-white hover:bg-opacity-10 outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div id="username_validation" className=" opacity-0 mb-4">
+              <div id="username_validation" className=" opacity-0 mb-2">
                 {displayMessages.username}
               </div>
-              <div className="flex flex-row items-center h-[20%] lg:h-[60px] bg-white bg-opacity-20 rounded-[18px]">
+              <div className="flex flex-row items-center h-[20%] lg:h-[50px] bg-white bg-opacity-20 rounded-[18px]">
                 <label
                   htmlFor="user_password"
-                  className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
+                  className="p-2 w-[160px] font-medium text-white text-end border-r-[1px]"
                 >
                   Password
                 </label>
@@ -253,17 +279,17 @@ export default function SignUpPage() {
                     }
                   }}
                   placeholder="Enter your password"
-                  className="bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                  className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
-              <div id="password_validation" className=" opacity-0">
+              <div id="password_validation" className="mb-2 opacity-0">
                 {displayMessages.password}
               </div>
-              <div className="flex my-3 text-white font-extralight items-center justify-between"></div>
-              <div className="flex flex-row mt-1 items-center h-[20%] lg:h-[60px] bg-white bg-opacity-20 rounded-[18px]">
+              <div className="flex text-white font-extralight items-center justify-between"></div>
+              <div className="flex flex-row mt-1 items-center h-[20%] lg:h-[50px] bg-white bg-opacity-20 rounded-[18px]">
                 <label
-                  htmlFor="user_password"
-                  className="p-2 w-[120px] font-medium text-white text-end border-r-[1px]"
+                  htmlFor="confirm_user_password"
+                  className="p-2 w-[160px] font-medium text-white text-end border-r-[1px]"
                 >
                   Confirm password
                 </label>
@@ -314,7 +340,7 @@ export default function SignUpPage() {
                     }
                   }}
                   placeholder="Re-enter your password"
-                  className="bg-transparent p-3 lg:p-[18px] font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                  className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
               </div>
               <div id="password_confirmation" className=" opacity-0">
@@ -343,6 +369,11 @@ export default function SignUpPage() {
               </button>
             </form>
           </div>
+          {loading && (
+            <div className="fixed  backdrop-blur-md top-0 left-0 bg-black bg-opacity-30 w-full h-full flex justify-center items-center">
+              {display}
+            </div>
+          )}
         </div>
       </div>
       <Footer />
