@@ -23,9 +23,9 @@ export default function ViewPost() {
     <div>
       <div className="min-h-full h-screen">
         <NavBar />
-        <div className=" bg-black bg-opacity-25  relative flex flex-col-reverse md:flex-row">
+        <div className=" bg-black bg-opacity-25 text-sm sm:text-base relative flex flex-col-reverse md:flex-row">
           <div id="post" className="md:w-[65%] rounded-xl mb-14 p-2">
-            <div className="font-[350] text-white p-2 rounded-xl bg-black bg-opacity-65 min-h-[100px]">
+            <div className="font-[350] text-white p-2 rounded-xl bg-gray-600 bg-opacity-65 min-h-[100px]">
               {post.content}
             </div>
             <div className=" text-end text-sm font-light p-2 border-b-[1px] border-black border-opacity-30">
