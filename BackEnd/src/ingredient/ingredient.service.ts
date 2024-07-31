@@ -33,6 +33,17 @@ export class IngredientsService {
     return await this.ingredientRepository.save(body);
   }
 
+  async update(id, body): Promise<any>{
+    return await this.ingredientRepository.update(id,body);
+  }
+
+  async bulkUpdate(ingredients: any[], recipe): Promise<any>{
+    for(let i = 0; i < ingredients.length ; i++){
+      ingredients[i] = {...ingredients[i], recipe};
+    }
+    return await this.ingredientRepository.save(ingredients);
+  }
+
   async delete(id): Promise<any> {
     return await this.ingredientRepository.delete(id);
   }
