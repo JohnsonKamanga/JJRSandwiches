@@ -36,4 +36,16 @@ export class InstructionsService {
   async create(body): Promise<Instruction> {
     return await this.instructionRepository.save(body);
   }
+
+  async update(id,body): Promise <any>{
+    return await this.instructionRepository.update(id,body);
+  }
+
+  async bulkUpdate(instructions: any[], recipe): Promise<any>{
+      for(let i = 0 ; i < instructions.length ; i++){
+        instructions[i].recipe = recipe;
+      }
+
+      return await this.instructionRepository.save(instructions)
+  }
 }
