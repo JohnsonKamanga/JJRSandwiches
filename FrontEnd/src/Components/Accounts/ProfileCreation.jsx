@@ -27,7 +27,8 @@ export default function ProfileCreation() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const update = axios.put(
+    setLoading(true);
+    const update = axios.putForm(
       `${baseurl}/users/${decodedToken?.sub}`,
       {
         firstName: firstName,
@@ -35,6 +36,7 @@ export default function ProfileCreation() {
         location: location,
         dob: dob,
         bio: bio,
+        profilePicture: profilePicture
       },
       {
         headers: headers,
@@ -46,32 +48,34 @@ export default function ProfileCreation() {
         setUserID(decodedToken.sub);
         setUserName(decodedToken.username);
         console.log("Navigating to the homepage");
-        axios.get(`${baseurl}/users/${decodedToken.username}`).then((user) => {
-          for (const key in user.data) {
-            console.log(`${key} : ${user.data[key]}`);
-          }
-        });
+        setLoading(false);
         navigate("/HomePage");
       })
       .catch((error) => {
-        console.log(error.message + " : " + error.code);
-        console.log("Unable to update user data");
+        console.error(error)
+        document.getElementById("loadingScreen").style.color = 'red';
+        setErrorMessage(`An error ocurred creating your profile./nError ${error.code} : ${error.message}/nPlease refresh the page`);
+        setError(true);
       });
   };
 
   const decodeToken = () => {
+    if(loading)
     document.getElementById("loadingScreen").style.color = 'black';
     axios
       .post(`${baseurl}/auth/decode`, {
         access_token: token?.data?.access_token,
       })
       .then((dToken) => {
+        if(!token)
+          throw new TypeError(`Null value error: User token cannot be null` );
         setDecodedToken(dToken.data);
         setLoading(false);
         setError(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(true);
         document.getElementById("loadingScreen").style.color = 'red';
         setErrorMessage("An error ocurred, please refresh the page");
         setError(true);
@@ -94,15 +98,15 @@ export default function ProfileCreation() {
           }}
         >
           <div
-            className="flex flex-col p-1 min-h-full h-screen items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35"
+            className="flex flex-col text-white p-1 min-h-full h-screen items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35"
             id="loadingScreen"
           >
             {error ? (
               errorMessage
             ) : (
-              <div>
+              <div className="bg-black bg-opacity-50 p-4 w-[300px] h-[300px] sm:w-[400px] rounded-[18px] flex flex-col items-center justify-center">
                 <FontAwesomeIcon
-                  className="text-7xl animate-spin"
+                  className="text-3xl md:text-7xl animate-spin"
                   icon={faSpinner}
                 />
                 <div>Loading...</div>
@@ -118,12 +122,12 @@ export default function ProfileCreation() {
     <div className="min-h-full h-screen">
       <NavBar />
       <div
-        className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed"
+        className="flex flex-col h-full bg-cover bg-center bg-fixed"
         style={{
           backgroundImage: `url(${BgImage})`,
         }}
       >
-        <div className="flex flex-col p-1 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
+        <div className="flex flex-col p-1 h-full items-center backdrop-blur-[6px] bg-black bg-opacity-35">
           <div className="text-center text-white mt-[2%] lg:mt-0 mb-[1%]">
             <h1 className="p-2 text-2xl md:text-4xl font-bold">
               Let us know more about you
@@ -132,7 +136,7 @@ export default function ProfileCreation() {
               Please fill in the following fields{" "}
             </p>
           </div>
-          <div className="bg-black bg-opacity-50 p-4 h-[80%] w-[80%] sm:w-[70%] md:w-[60%] lg:w-[35%] rounded-[18px] flex flex-col items-center justify-center text-black">
+          <div className="bg-black bg-opacity-50 p-4 sm:h-[80%] w-[350px] sm:w-[400px] md:w-[450px] lg:w-[35%] rounded-[18px] flex flex-col items-center justify-center text-black">
             <form
               id="profileCreation"
               onSubmit={handleSubmit}
@@ -161,6 +165,7 @@ export default function ProfileCreation() {
                   </label>
 
                   <input
+                    name="profilePicture"
                     id="profilePicture"
                     type="file"
                     accept="image/*"
@@ -178,7 +183,7 @@ export default function ProfileCreation() {
                         preview.src = reader.result;
                       };
                       reader.readAsDataURL(e.target.files[0]);
-                      setProfilePicture(preview.src);
+                      setProfilePicture(e.target.files[0]);
                     }}
                     className="hidden"
                   ></input>
