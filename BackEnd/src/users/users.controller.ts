@@ -26,17 +26,23 @@ export class UsersController {
         return await this.userService.findOne(username);
     }
 
+    @Get('user/:id')
+    async getUserByID(@Param('id')id:number){
+        return await this.userService.findOneByID(id);
+    }
+
     @Get('profile-picture/:username')
     async getProfilePicture(@Param('username')username: string, @Res()res : Response ){
         const user = await this.userService.findOne(username);
-        if(user.profilePicture !== ''){
-        const file = readFileSync(user.profilePicture);
+        let path = 'src/uploads/profile-pictures/default-user-picture.jpg';
+        if(user.profilePicture !== '')
+            path = user.profilePicture;
+        const file = readFileSync(path);
         const stream = new Readable();
+        res.contentType(`image/${path.split('.').pop()}`);
         stream.push(file);
         stream.push(null);
         stream.pipe(res);
-        }
-        return;
     }
 
     @Delete(':id')
