@@ -14,11 +14,11 @@ export default function Recipes() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const display = [
-    <div className="flex flex-col">
-      <FontAwesomeIcon className="animate-spin text-5xl" icon={faSpinner} />
-      <div className="text-2xl">loading...</div>
+    <div className="flex flex-col items-center justify-center bg-black bg-opacity-35 w-[250px] h-[250px] rounded-md">
+      <FontAwesomeIcon className="animate-spin text-3xl" icon={faSpinner} />
+      <div className="text-xl">loading...</div>
     </div>,
-    <div className="text-2xl text-[#ff0000]">{errorMessage}</div>,
+    <div className="flex flex-col items-center justify-center bg-black bg-opacity-35 w-[250px] h-[250px] rounded-md text-2xl text-[#ff0000]">{errorMessage}</div>,
   ];
 
   const getImage = (recipe)=>{
@@ -56,7 +56,7 @@ export default function Recipes() {
         key={recipe.id}
         className="m-2 p-2 h-fit text-white transition-all duration-[200ms] border-[1px] bg-black bg-opacity-25 border-white hover:border-opacity-45 border-opacity-25 rounded-[24px]"
       >
-        <div className="min-h-[240px] p-2 rounded-[20px] bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="min-h-[150px] sm:min-h-[240px] p-2 rounded-[20px] bg-black bg-opacity-50 flex items-center justify-center">
         <img
         loading="lazy"
         onLoadStart={getImage(recipe)}
@@ -73,7 +73,7 @@ export default function Recipes() {
         </div>
         <div className=" my-1 font-semibold flex justify-center text-center hover:cursor-pointer">
         <NavLink
-        className="bg-black block bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-3xl w-[50%] font-medium text-white"
+        className="bg-black text-xs sm:text-sm md:text-base block bg-opacity-70 mb-[2%] hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-3xl w-[50%] font-medium text-white"
         to={`/Recipes/recipe-instructions/${recipe?.id}`}>
           <div >
               Full Recipe
@@ -91,7 +91,7 @@ export default function Recipes() {
         <NavBar/>
       <div
       id="loadingScreen"
-      className="flex justify-center items-center min-h-full h-screen w-full backdrop-blur-xl"
+      className="flex text-white justify-center items-center min-h-full h-screen w-full backdrop-blur-xl bg-gray-600 bg-opacity-65"
     >
       {display[loadingScreenDisplayIndex]}
     </div>
@@ -104,7 +104,7 @@ export default function Recipes() {
     <div>
       <div className="flex flex-col min-h-full h-screen">
         <NavBar />
-        <div className="">
+        <div className="bg-gray-600 bg-opacity-65">
           <div className="">
             <SearchBar context="recipes" setResults={setRecipes} loadingState={loading} setLoadingState={setLoading} />
             <div className="min-h-full">
