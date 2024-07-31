@@ -24,7 +24,6 @@ export default function LoginPage() {
     const token = axios.post(`${baseurl}/auth/login`,{username: userNameOrEmail, password: password});
 
     token.then(async (tokenData)=>{
-    console.log("Sign in successful. Navigating to the homepage...");
     setCurrentUserData((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data);
     setUserID((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data.id);
     setUserName((await axios.get(`${baseurl}/users/${userNameOrEmail}`)).data.username);
