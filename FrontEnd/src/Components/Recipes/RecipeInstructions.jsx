@@ -44,8 +44,6 @@ export default function RecipeInstructions() {
     );
   };
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     axios
       .get(`${baseurl}/recipes/recipe-pictures/${recipe.id}`, {
