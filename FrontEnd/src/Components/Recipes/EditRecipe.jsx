@@ -59,7 +59,11 @@ export default function EditRecipe() {
       let copy = [];
       for(let i = 0 ; i < ingredients.length ; i++)
         copy.push(ingredients[i]);
-      copy[ingredients.indexOf(editIngredient)] = newIngredient;
+    const targetIngredientIndex = ingredients.indexOf(editIngredient);
+    editIngredient?.id ?
+      copy[targetIngredientIndex] = {...newIngredient, id: editIngredient?.id}
+      :
+      copy[targetIngredientIndex] = newIngredient;
       ingredientsRef.current = copy;
       setIngredients(copy);
       setEditIngredient();
@@ -82,6 +86,7 @@ export default function EditRecipe() {
     );
 
     newRecipe.user = recipe.user;
+    newRecipe.id = recipe.id;
 
     axios
       .put(`${baseurl}/recipes/${recipe.id}`, newRecipe)
