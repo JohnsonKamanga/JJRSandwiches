@@ -8,6 +8,7 @@ import Footer from "../HomePage/Footer";
 export default function ViewPost() {
   const post = useLoaderData();
   const [count, setCount] = useState(0);
+  const [comments, setComments] = useState([]);
   const [windowsize, setWindowSize] = useState(window.innerWidth);
   const time = new Date(post.postedAt).toLocaleString();
   const timestamp = time.slice(0, 15) + time.slice(18);
@@ -18,6 +19,19 @@ export default function ViewPost() {
       console.log("removing resize listener");
     });
   }, [windowsize]);
+
+  useEffect(() => {
+    const commentTopHeight =
+      document.getElementById("commentSection").offsetTop;
+    const commentHeight =
+      document.getElementById("commentSection").offsetHeight;
+    const postHeight = document.getElementById("post").offsetHeight;
+    const deltaHeight = commentHeight + commentTopHeight - postHeight;
+    document.getElementById("post").style.height = `${
+      postHeight + deltaHeight
+    }px`;
+    setCount((count) => count + 1);
+  }, [comments]);
 
   return (
     <div>
@@ -31,27 +45,12 @@ export default function ViewPost() {
             <div className=" text-end text-sm font-light p-2 border-b-[1px] border-black border-opacity-30">
               {timestamp}
             </div>
-            <div
-              onLoad={() => {
-                if (count < 1) {
-                  const commentTopHeight =
-                    document.getElementById("commentSection").offsetTop;
-                  const commentHeight =
-                    document.getElementById("commentSection").offsetHeight;
-                  const postHeight =
-                    document.getElementById("post").offsetHeight;
-                  const deltaHeight =
-                    commentHeight + commentTopHeight - postHeight;
-                  document.getElementById("post").style.height = `${
-                    postHeight + deltaHeight
-                  }px`;
-                  setCount((count) => count + 1);
-                }
-              }}
-              id="commentSection"
-              className="h-fit"
-            >
-              <CommentSection post={post} />
+            <div id="commentSection" className="h-fit">
+              <CommentSection
+                comments={comments}
+                setComments={setComments}
+                post={post}
+              />
             </div>
           </div>
           <div
