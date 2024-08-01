@@ -73,7 +73,7 @@ export default function SignUpPage() {
   return (
     <div>
       <div
-        className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed"
+        className="flex flex-col min-h-full h-screen bg-cover bg-center bg-fixed relative"
         style={{
           backgroundImage: `url(${BgImage})`,
         }}
@@ -369,13 +369,13 @@ export default function SignUpPage() {
               </button>
             </form>
           </div>
-          {loading && (
-            <div className="fixed  backdrop-blur-md top-0 left-0 bg-black bg-opacity-30 w-full h-full flex justify-center items-center">
-              {display}
-            </div>
-          )}
         </div>
       </div>
+      {loading && (
+        <div className="fixed  backdrop-blur-md top-0 left-0 bg-black bg-opacity-30 w-full h-full flex justify-center items-center">
+          {display}
+        </div>
+      )}
       <Footer />
     </div>
   );
