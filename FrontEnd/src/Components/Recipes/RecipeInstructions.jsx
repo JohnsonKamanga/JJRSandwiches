@@ -23,7 +23,7 @@ export default function RecipeInstructions() {
         key={ingredient?.id}
         className="p-2 flex flex-row text-start text-sm md:text-lg"
       >
-        <div className="font-[400] mr-1 text-end w-[40%]">
+        <div className="font-[400] mr-1 w-[40%]">
           {ingredient?.name}: {ingredient?.quantity}
         </div>
       </div>
