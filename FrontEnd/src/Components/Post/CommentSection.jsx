@@ -12,7 +12,8 @@ export default function CommentSection(props) {
   const { token } = useContext(UserContext);
   const [decodedToken, setDecodedToken] = useState();
   const [rendering, setRendering] = useState(true);
-  const [comments, setComments] = useState([]);
+  const comments = props.comments;
+  const setComments = props.setComments;
   const [textArea, setTextArea] = useState("");
   const unsubscribe = () => {
     axios.get(`${baseurl}/comments/post/${post.id}`).then((com) => {
@@ -45,13 +46,17 @@ export default function CommentSection(props) {
     );
   }
   return (
-    <div className=" overflow-y-scroll">
+    <div id="commentSection" className=" overflow-y-scroll">
       <div className="p-1 text-lg font-medium">Comment Section</div>
-      <Comments
-        token={decodedToken}
-        setTextArea={setTextArea}
-        comments={comments}
-      />
+      <div id="commentsList">
+        <Comments
+          token={decodedToken}
+          setTextArea={setTextArea}
+          comments={comments}
+          post={post}
+          setComments={setComments}
+        />
+      </div>
       {token && (
         <CommentTextarea
           comments={comments}
