@@ -13,7 +13,7 @@ export default function EditPost(props) {
   const setEditPost = props.setEditPost;
   const setUserPosts = props.setUserPosts;
   const decodedToken = props.decodedToken;
-  const [post, setPost] = useState(props.post.content);
+  const [post, setPost] = useState(props.post?.content);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [display, setDisplay] = useState(
@@ -62,7 +62,7 @@ export default function EditPost(props) {
   };
 
   return (
-    <div className="fixed top-0 left-0 flex items-center justify-center h-full w-full bg-gray-600 bg-opacity-60 backdrop-blur-md">
+    <div className="absolute z-50 top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-35 backdrop-blur-[6px]">
       {loading ? (
         <div className="p-4 w-[60%] flex flex-col items-center text-white ">
           <div
@@ -88,7 +88,7 @@ export default function EditPost(props) {
             <div className="flex flex-row w-full items-center justify-center bg-black bg-opacity-65 rounded-xl mb-1">
               <label htmlFor="post"></label>
               <textarea
-                className="bg-transparent w-[340px] h-[340px] sm:w-[500px] md:w-[600px] sm:h-[400px] text-sm text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10 rounded-xl outline-none border-none border-0 border-opacity-0"
+                className=" bg-black bg-opacity-20 hover:bg-opacity-50 w-[340px] h-[340px] sm:w-[500px] md:w-[600px] sm:h-[400px] text-sm text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] rounded-xl outline-none border-none border-0 border-opacity-0"
                 id="post"
                 placeholder="Post something in the community"
                 value={post}
