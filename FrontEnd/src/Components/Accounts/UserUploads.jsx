@@ -40,18 +40,19 @@ export default function UserUploads() {
           <NavLink
             to={`/communities/CommunityPage/${post.communityId}/Posts/${post.id}`}
           >
-            <div className="bg-white bg-opacity-20 hover:bg-opacity-30 transition-all h-[54px] rounded-md p-1 mb-1">
+            <div className="bg-white truncate bg-opacity-20 hover:bg-opacity-30 transition-all h-[54px] rounded-md p-1 mb-1">
               {post.content}
             </div>
           </NavLink>
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row">
-              <div 
-              onClick={()=>{
-                setTargetEditPost(post);
-                setEditPost(true);
-              }}
-              className="mx-1 hover:cursor-pointer hover:text-[#f87058]">
+              <div
+                onClick={() => {
+                  setTargetEditPost(post);
+                  setEditPost(true);
+                }}
+                className="mx-1 hover:cursor-pointer hover:text-[#f87058]"
+              >
                 edit
               </div>
               <div
@@ -87,26 +88,26 @@ export default function UserUploads() {
         <div className="bg-black bg-opacity-45 min-h-[50px] text-xs md:text-sm font-thin mb-1 p-2 mx-1 rounded-lg">
           <NavLink to={`/Recipes/recipe-instructions/${recipe?.id}`}>
             <div className="bg-black bg-opacity-45 hover:bg-opacity-60 transition-all p-2 rounded-md">
-              <div className="mb-1">Recipe: {recipe.name}</div>
+              <div className="mb-1 truncate">Recipe: {recipe.name}</div>
               {recipe.ingredients.length > 0 ? (
-                <div className="bg-white bg-opacity-25 h-[30px] rounded-[4px] p-1 mb-1">
+                <p className="bg-white truncate bg-opacity-25 h-[30px] rounded-[4px] p-1 mb-1">
                   Ingredients:
-                  <span>
+                  <span className="truncate">
                     {recipe.ingredients.length > 0
                       ? recipe?.ingredients[0]?.name
                       : ""}
                   </span>
-                  <span>
+                  <span className="truncate">
                     {recipe.ingredients.length > 1
                       ? `, ${recipe?.ingredients[1]?.name}`
                       : ""}
                   </span>
-                  <span>
+                  <span className="truncate">
                     {recipe.ingredients.length > 2
                       ? `, ${recipe?.ingredients[0]?.name}...`
                       : ""}
                   </span>
-                </div>
+                </p>
               ) : (
                 <div className="bg-white bg-opacity-25 h-[30px] rounded-md p-1 mb-1">
                   no ingredients listed
@@ -116,8 +117,9 @@ export default function UserUploads() {
           </NavLink>
           <div className="flex flex-row">
             <NavLink
-            to={`/Recipes/edit-recipe/${recipe.id}`}
-            className="mx-1 hover:cursor-pointer hover:text-[#f87058]">
+              to={`/Recipes/edit-recipe/${recipe.id}`}
+              className="mx-1 hover:cursor-pointer hover:text-[#f87058]"
+            >
               edit
             </NavLink>
             <div
@@ -211,167 +213,190 @@ export default function UserUploads() {
   }
 
   return (
-    <div
-      id="main"
-      className="min-h-screen w-full flex flex-col text-white backdrop-blur-[6px] p-2 relative"
-    >
-      <h1 className="text-3xl text-center font-medium my-2">Your Uploads</h1>
+    <div>
       <div
-        id="table"
-        className="h-full w-full flex flex-col lg:flex-row p-2 bg-black bg-opacity-30 rounded-lg"
+        id="main"
+        className="min-h-screen w-full flex flex-col text-white backdrop-blur-[6px] p-2 relative"
       >
+        <h1 className="text-3xl text-center font-medium my-2">Your Uploads</h1>
         <div
-          id="recipes"
-          className="lg:w-[50%] overflow-y-scroll flex flex-col items-center border-b-[1px] lg:border-b-0 lg:border-r-[1px] p-2"
+          id="table"
+          className="h-full w-full flex flex-col lg:flex-row p-2 bg-black bg-opacity-30 rounded-lg"
         >
-          <h2 className="text-center text-2xl font-semibold mb-1">Recipes</h2>
-          <div>
-            {loadingRecipes ? (
-              <div className="flex flex-col items-center justify-center">
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  className="animate-spin text-3xl"
-                />
-                <div>Loading...</div>
-              </div>
-            ) : userRecipes.length > 0 ? (
-              <div className="grid grid-cols-2">
-                {userRecipes.map(drawRecipes)}
-              </div>
-            ) : (
-              "Looks like you currently have no recipes"
-            )}
-          </div>
-        </div>
-        <div
-          id="posts"
-          className="lg:w-[50%] overflow-y-scroll flex flex-col justify-center items-center p-2"
-        >
-          <h2 className="text-center text-2xl font-semibold mb-1">Posts</h2>
-          <div>
-            {loadingPosts ? (
-              <div className="flex flex-col items-center justify-center">
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  className="animate-spin text-3xl"
-                />
-                <div>Loading...</div>
-              </div>
-            ) : userPosts.length > 0 ? (
-              <div className="grid grid-cols-2">{userPosts.map(drawPosts)}</div>
-            ) : (
-              "Looks like you currently have no posts avaialble"
-            )}
-          </div>
           <div
-            className="fixed hidden flex-col items-center min-h-[20%] md:min-h-[30%] p-2 z-40 w-full top-0 left-0 bg-black bg-opacity-75 backdrop-blur-lg"
-            id="deleteConfirmation"
+            id="recipes"
+            className="lg:w-[50%] overflow-y-scroll flex flex-col items-center border-b-[1px] lg:border-b-0 lg:border-r-[1px] p-2"
           >
-            <div className="mt-10 flex flex-col justify-center items-center">
-              <p className="text-2xl">
-                Are you sure you want do delete this {targetUpload?.context}?
-              </p>
-              <div className="flex flex-row mt-3">
-                <div
-                  className="p-2 h-fit text-xl mx-1 hover:cursor-pointer hover:text-[#f87058] bg-black bg-opacity-30 border-[1px] border-white border-opacity-20 rounded-md"
-                  onClick={() => {
-                    const element = document.getElementById("loadingPopUp");
-                    const deletePopUp = document.getElementById("deleteConfirmation");
-                    element.style.top = `${deletePopUp.offsetTop}px`;
-                    element.style.display="flex";
-                    setDisplay(
-                      <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
-                        <FontAwesomeIcon
-                          icon={faSpinner}
-                          className="animate-spin text-4xl"
-                        />
-                        <div className="text-xl">Loading...</div>
-                      </div>
-                    );
-                    if (targetUpload.context === "post") {
-                      axios
-                        .delete(`${baseurl}/posts/${targetUpload.id}`)
-                        .then(async(res) => {
-                          setUserPosts((await axios.get(`${baseurl}/posts/user/${decodedToken.sub}`)).data);
-                          setDisplay(
-                            <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
-                        <div className="text-xl">post deleted</div>
-                      </div>
-                          )
-                        })
-                        .catch((err) => {
-                          setDisplay(
-                            <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-black bg-opacity-65 rounded-lg">
-                              <div className="text-xl text-[#ff0000]">
-                                {err.message + " : " + err.code}
-                              </div>
-                            </div>
-                          );
-                        });
-                    } else {
-                      axios
-                        .delete(`${baseurl}/recipes/${targetUpload.id}`)
-                        .then(async(res) => {
-                          setUserRecipes((await axios.get(`${baseurl}/recipes/user/${decodedToken.sub}`)).data);
-                          setDisplay(
-                            <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
-                        <div className="text-xl">recipe deleted</div>
-                      </div>
-                          )
-                        })
-                        .catch((err) => {
-                          setDisplay(
-                            <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-black bg-opacity-65 rounded-lg">
-                              <div className="text-xl text-[#ff0000]">
-                                {err.message + " : " + err.code}
-                              </div>
-                            </div>
-                          );
-                        });
-                    }
-                  }}
-                >
-                  Yes
+            <h2 className="text-center text-2xl font-semibold mb-1">Recipes</h2>
+            <div>
+              {loadingRecipes ? (
+                <div className="flex flex-col items-center justify-center">
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="animate-spin text-3xl"
+                  />
+                  <div>Loading...</div>
                 </div>
-                <div
-                  className="p-2 h-fit text-xl mx-1 hover:cursor-pointer hover:text-[#f87058] bg-black bg-opacity-30 border-[1px] border-white border-opacity-20 rounded-md"
-                  onClick={() => {
-                    const element =
-                      document.getElementById("deleteConfirmation");
-                    if (element) {
-                      element.style.display = "none";
-                    }
-                  }}
-                >
-                  No
+              ) : userRecipes.length > 0 ? (
+                <div className="grid grid-cols-2">
+                  {userRecipes.map(drawRecipes)}
                 </div>
-              </div>
+              ) : (
+                "Looks like you currently have no recipes"
+              )}
             </div>
           </div>
           <div
-            id="loadingPopUp"
-            className="fixed hidden flex-col items-center justify-center min-h-[20%] p-2 z-50 w-full top-0 left-0 bg-black bg-opacity-65 backdrop-blur-lg"
+            id="posts"
+            className="lg:w-[50%] overflow-y-scroll flex flex-col justify-center items-center p-2"
           >
-            <div 
-            className="bg-white absolute top-5 left-5 flex hover:cursor-pointer items-center justify-center w-10 h-10 bg-opacity-30 hover:text-[#f87058] hover:bg-opacity-40 border-[1px] border-black  transition-all duration-200 p-2 rounded-xl font-medium text-white"
-            onClick={()=>{
-              const loadingPopUp = document.getElementById("loadingPopUp");
-              const deletePopUp = document.getElementById("deleteConfirmation");
-              if(loadingPopUp && deletePopUp){
-                loadingPopUp.style.display = "none";
-                deletePopUp.style.display = "none";
-              }
-            }}
+            <h2 className="text-center text-2xl font-semibold mb-1">Posts</h2>
+            <div>
+              {loadingPosts ? (
+                <div className="flex flex-col items-center justify-center">
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="animate-spin text-3xl"
+                  />
+                  <div>Loading...</div>
+                </div>
+              ) : userPosts.length > 0 ? (
+                <div className="grid grid-cols-2">
+                  {userPosts.map(drawPosts)}
+                </div>
+              ) : (
+                "Looks like you currently have no posts avaialble"
+              )}
+            </div>
+            <div
+              className="fixed hidden flex-col items-center min-h-[20%] md:min-h-[30%] p-2 z-40 w-full top-0 left-0 bg-black bg-opacity-75 backdrop-blur-lg"
+              id="deleteConfirmation"
             >
-              <FontAwesomeIcon icon={faX}/>
+              <div className="mt-10 flex flex-col justify-center items-center">
+                <p className="text-2xl">
+                  Are you sure you want do delete this {targetUpload?.context}?
+                </p>
+                <div className="flex flex-row mt-3">
+                  <div
+                    className="p-2 h-fit text-xl mx-1 hover:cursor-pointer hover:text-[#f87058] bg-black bg-opacity-30 border-[1px] border-white border-opacity-20 rounded-md"
+                    onClick={() => {
+                      const element = document.getElementById("loadingPopUp");
+                      const deletePopUp =
+                        document.getElementById("deleteConfirmation");
+                      element.style.top = `${deletePopUp.offsetTop}px`;
+                      element.style.display = "flex";
+                      setDisplay(
+                        <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
+                          <FontAwesomeIcon
+                            icon={faSpinner}
+                            className="animate-spin text-4xl"
+                          />
+                          <div className="text-xl">Loading...</div>
+                        </div>
+                      );
+                      if (targetUpload.context === "post") {
+                        axios
+                          .delete(`${baseurl}/posts/${targetUpload.id}`)
+                          .then(async (res) => {
+                            setUserPosts(
+                              (
+                                await axios.get(
+                                  `${baseurl}/posts/user/${decodedToken.sub}`
+                                )
+                              ).data
+                            );
+                            setDisplay(
+                              <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
+                                <div className="text-xl">post deleted</div>
+                              </div>
+                            );
+                          })
+                          .catch((err) => {
+                            setDisplay(
+                              <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-black bg-opacity-65 rounded-lg">
+                                <div className="text-xl text-[#ff0000]">
+                                  {err.message + " : " + err.code}
+                                </div>
+                              </div>
+                            );
+                          });
+                      } else {
+                        axios
+                          .delete(`${baseurl}/recipes/${targetUpload.id}`)
+                          .then(async (res) => {
+                            setUserRecipes(
+                              (
+                                await axios.get(
+                                  `${baseurl}/recipes/user/${decodedToken.sub}`
+                                )
+                              ).data
+                            );
+                            setDisplay(
+                              <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-white bg-opacity-35 rounded-lg text-white">
+                                <div className="text-xl">recipe deleted</div>
+                              </div>
+                            );
+                          })
+                          .catch((err) => {
+                            setDisplay(
+                              <div className="flex flex-col items-center justify-center h-[250px] w-[250px] bg-black bg-opacity-65 rounded-lg">
+                                <div className="text-xl text-[#ff0000]">
+                                  {err.message + " : " + err.code}
+                                </div>
+                              </div>
+                            );
+                          });
+                      }
+                    }}
+                  >
+                    Yes
+                  </div>
+                  <div
+                    className="p-2 h-fit text-xl mx-1 hover:cursor-pointer hover:text-[#f87058] bg-black bg-opacity-30 border-[1px] border-white border-opacity-20 rounded-md"
+                    onClick={() => {
+                      const element =
+                        document.getElementById("deleteConfirmation");
+                      if (element) {
+                        element.style.display = "none";
+                      }
+                    }}
+                  >
+                    No
+                  </div>
+                </div>
+              </div>
             </div>
-           <div>{display}</div>
-          </div>{
-          editPost &&
-          <EditPost decodedToken={decodedToken} post={targetEditPost} setUserPosts={setUserPosts} editPost={editPost} setEditPost={setEditPost}/>
-        }
+          </div>
         </div>
       </div>
+      <div
+        id="loadingPopUp"
+        className="absolute hidden flex-col items-center justify-center h-full p-2 z-50 w-full top-0 left-0 bg-black bg-opacity-35 backdrop-blur-[6px]"
+      >
+        <div
+          className="bg-white absolute top-5 left-5 flex hover:cursor-pointer items-center justify-center w-10 h-10 bg-opacity-30 hover:text-[#f87058] hover:bg-opacity-40 border-[1px] border-black  transition-all duration-200 p-2 rounded-xl font-medium text-white"
+          onClick={() => {
+            const loadingPopUp = document.getElementById("loadingPopUp");
+            const deletePopUp = document.getElementById("deleteConfirmation");
+            if (loadingPopUp && deletePopUp) {
+              loadingPopUp.style.display = "none";
+              deletePopUp.style.display = "none";
+            }
+          }}
+        >
+          <FontAwesomeIcon icon={faX} />
+        </div>
+        <div>{display}</div>
+      </div>
+      {editPost && (
+        <EditPost
+          decodedToken={decodedToken}
+          post={targetEditPost}
+          setUserPosts={setUserPosts}
+          editPost={editPost}
+          setEditPost={setEditPost}
+        />
+      )}
     </div>
   );
 }
