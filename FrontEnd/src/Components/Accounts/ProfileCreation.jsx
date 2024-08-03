@@ -101,17 +101,19 @@ export default function ProfileCreation() {
             className="flex flex-col text-white p-1 min-h-full h-screen items-center justify-center backdrop-blur-[6px] bg-black bg-opacity-35"
             id="loadingScreen"
           >
+            <div className="bg-black text-white bg-opacity-50 p-4 w-[300px] h-[300px] sm:w-[400px] rounded-[18px] flex flex-col items-center justify-center">
             {error ? (
               errorMessage
             ) : (
-              <div className="bg-black bg-opacity-50 p-4 w-[300px] h-[300px] sm:w-[400px] rounded-[18px] flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <FontAwesomeIcon
-                  className="text-3xl md:text-7xl animate-spin"
+                  className="text-3xl animate-spin"
                   icon={faSpinner}
                 />
-                <div>Loading...</div>
+                <div className="text-xl">Loading...</div>
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
