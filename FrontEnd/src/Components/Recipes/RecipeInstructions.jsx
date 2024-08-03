@@ -76,11 +76,12 @@ export default function RecipeInstructions() {
         <div className="min-h-full h-screen backdrop-blur-[6px]">
           <div className="p-[2%]">
             <div className="p-3 text-white w-fit flex flex-row rounded-[18px] bg-black bg-opacity-40">
-              <img
+             <div className=""> <img
                 src={image}
                 alt="recipe image"
-                className="rounded-[16px] h-[200px]"
+                className="rounded-[16px] max-h-[200px] sm:h-[200px]"
               />
+              </div>
               <div className="ml-3 flex flex-col justify-end">
                 <h1 className="font-bold p-2 text-xl lg:text-[44px]">
                   {recipe?.name}
