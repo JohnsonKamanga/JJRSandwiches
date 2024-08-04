@@ -37,7 +37,7 @@ export default function CommunityPage() {
     return (
       <div
         key={post?.id}
-        className="border-[1px] text-xs sm:text-sm text-white border-white border-opacity-35 hover:border-opacity-45 rounded-[22px] m-2 h-fit min-w-[230px] sm:min-w-[270px] transition-colors duration-[500ms] bg-black bg-opacity-40 hover:bg-opacity-55 p-[3px]"
+        className="border-[1px] text-xs sm:text-sm text-white border-white border-opacity-35 hover:border-opacity-45 rounded-[22px] m-2 h-fit min-w-[40%] sm:min-w-[270px] transition-colors duration-[500ms] bg-black bg-opacity-40 hover:bg-opacity-55 p-[3px]"
       >
         <div className="flex flex-col justify-between p-2 rounded-[18px] ">
           <div className="flex flex-row ps-4 py-1 mb-2 items-center border-[1px] rounded-xl border-white border-opacity-30">
@@ -57,8 +57,8 @@ export default function CommunityPage() {
           <NavLink
             to={`/communities/CommunityPage/${community.id}/Posts/${post.id}`}
           >
-            <div className="ps-4 py-2 h-[55px] border-[1px] border-white border-opacity-35 bg-black bg-opacity-65 rounded-xl font-light hover:text-[#f29260] overflow-hidden text-ellipsis hover:cursor-pointer">
-              {post.content}
+            <div className="flex items-center py-2 h-[55px] w-full border-[1px] border-white border-opacity-35 bg-black bg-opacity-65 rounded-xl font-light hover:text-[#f29260] hover:cursor-pointer">
+              <p className="p-2 truncate">{post.content}</p>
             </div>
           </NavLink>
           <div className=" text-end text-xs lg:text-sm font-light pt-1">{timestamp}</div>
