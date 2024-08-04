@@ -38,7 +38,7 @@ import { SubComment } from './sub-comment/sub-comment.entity';
       type: 'postgres',
       url: configService.get<string>('DATABASE_URL'),
       entities: [User,Ingredient,Instruction,Community,Comment,Post,Recipe, SubComment] ,
-      synchronize: true,
+      synchronize: false,
     }),
       inject:[ConfigService]
     }),
