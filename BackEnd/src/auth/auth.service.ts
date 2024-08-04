@@ -3,12 +3,14 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { jwtConstants } from './constant';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtservice: JwtService,
+    private configService: ConfigService
   ) {}
 
   async signIn(
@@ -35,7 +37,7 @@ export class AuthService {
   async verify(access_token: string): Promise<any> {
     try {
       await this.jwtservice.verifyAsync(access_token, {
-        secret: jwtConstants.secret,
+        secret: this.configService.get<string>("JWT_SECRET"),
       });
     } catch (error) {
       console.error(error);

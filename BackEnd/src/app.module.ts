@@ -11,6 +11,15 @@ import { CommunitiesModule } from './communities/communities.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentModule } from './comment/comment.module';
 import { SubCommentModule } from './sub-comment/sub-comment.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User } from './users/user.entity';
+import { Ingredient } from './ingredient/ingredient.entity';
+import { Instruction } from './instruction/instruction.entity';
+import { Community } from './communities/community.entity';
+import { Comment } from './comment/comment.entity';
+import { Post } from './posts/post.entity';
+import { Recipe } from './recipe/recipe.entity';
+import { SubComment } from './sub-comment/sub-comment.entity';
 
 @Module({
   imports: [
@@ -18,16 +27,20 @@ import { SubCommentModule } from './sub-comment/sub-comment.module';
     UsersModule,
     IngredientsModule,
     InstructionsModule,
+    ConfigModule.forRoot({
+      isGlobal:true,
+      envFilePath: ".env",
+    }),
 
-    TypeOrmModule.forRoot({
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      useFactory:async (configService : ConfigService)=>({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'johnson',
-      database: 'jjrsandwiches',
-      autoLoadEntities: true,//remember to change to entities: [] before deploying
+      url: configService.get<string>('DATABASE_URL'),
+      entities: [User,Ingredient,Instruction,Community,Comment,Post,Recipe, SubComment] ,
       synchronize: true,
+    }),
+      inject:[ConfigService]
     }),
 
     AuthModule,
