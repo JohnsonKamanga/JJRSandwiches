@@ -207,7 +207,7 @@ export default function FAQ() {
 
   return (
     <div >
-    <div className="flex flex-col min-h-full h-screen overflow-y-auto ">
+    <div className="flex flex-col min-h-full h-screen ">
       <NavBar />
       <div className="flex flex-col bg-fixed bg-cover bg-center items-center min-h-full "
       style={{
