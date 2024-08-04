@@ -142,16 +142,18 @@ export default function LoginPage() {
                       }
                       setShowPassword(!showPassword);
                     }}
+                    className="accent-[#f87058]"
                   ></input>
                 </div>
               </div>
               <div id="errMsg" className="hidden justify-start w-full ps-3 mt-1">{errorMessage}</div>
               <div className="flex w-full sm:w-[350px] text-white font-extralight items-center justify-between">
-                <div className="flex justify-end p-2 w-[125px] sm:w-[150px] hover:text-[#f87058] transition-all">
-                  <label htmlFor="remember_me" className="mr-2 hover:cursor-pointer">
+                <div className="flex justify-end p-2 w-[125px] sm:w-[150px] transition-all">
+                  <label htmlFor="remember_me" className="hover:text-[#f87058] mr-2 hover:cursor-pointer">
                     Remember me?
                   </label>
                   <input
+                  className="accent-[#f87058]"
                     id="remember_me"
                     type="checkbox"
                     value={rememberMe}
