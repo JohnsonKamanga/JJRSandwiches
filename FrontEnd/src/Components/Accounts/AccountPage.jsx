@@ -6,12 +6,13 @@ import Security from "./Security";
 import UserUploads from "./UserUploads";
 import LogOut from "./LogOut";
 import { UserContext } from "./UserContext";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import BgImage from "./image3.jpg";
 
 export default function AccountPage() {
+  const navigate = useNavigate();
   const [accountManagementOptions, setAccountManagementOptions] = useState([
     <NavLink
       to="/AccountPage/Bio"
@@ -59,11 +60,14 @@ export default function AccountPage() {
     //used to reset height conditions
     window.addEventListener("resize", () => {
       setWindowSize(window.innerWidth);
+      const sidebar = document.getElementById("sideBar");
+      if(sidebar){
       if (window.innerWidth > 768) {
-        document.getElementById("sideBar").style.width = "20%";
+        sidebar.style.width = "20%";
       } else {
-        document.getElementById("sideBar").style.width = "5px";
+        sidebar.style.width = "5px";
       }
+    }
     });
     return window.removeEventListener("resize", () => {
       console.log("removing resize listener");
@@ -107,10 +111,11 @@ export default function AccountPage() {
               <div className="flex flex-row-reverse justify-end h-full">
                 <div
                   onClick={() => {
-                    if (!showSideBar) {
-                      document.getElementById("sideBar").style.width = "250px";
+                    const sidebar = document.getElementById("sideBar");
+                    if (sidebar && !showSideBar) {
+                      sidebar.style.width = "250px";
                     } else {
-                      document.getElementById("sideBar").style.width = "20px";
+                      sidebar.style.width = "20px";
                     }
                     setShowSideBar(!showSideBar);
                   }}
@@ -142,7 +147,7 @@ export default function AccountPage() {
                 </div>
               </div>
             </div>
-            <div id="tabOptions" className=" w-full md:w-[80%] h-full">
+            <div id="tabOptions" className=" w-full md:w-[80%] h-full bg-black bg-opacity-30">
               {tabOptions[pageName]}
             </div>
           </div>
@@ -159,20 +164,33 @@ export default function AccountPage() {
     );
   else
     return (
-      <div className="flex flex-col min-h-full h-screen justify-center items-center">
-        <div>you must login first to update account details</div>
+  <div
+  className="h-fit relative flex flex-col bg-fixed bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${BgImage})`,
+            }}
+  >
+      <div className="flex flex-col min-h-full h-screen justify-center items-center text-white bg-black bg-opacity-30 backdrop-blur-[6px]">
+        <div className="flex flex-col items-center text-center justify-center bg-black bg-opacity-50 rounded-md p-5">
+        <div className="text-lg sm:text-xl md:text-3xl mb-2">you must login first to update account details</div>
         <div className="flex flex-row">
-          <NavLink to="/LoginPage">
-            <button className="mx-1 bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white">
-              Sign In
-            </button>
-          </NavLink>
-          <NavLink to="/HomePage">
-            <button className="mx-1 bg-black bg-opacity-70 hover:text-[#f87058] hover:bg-opacity-90 transition-all duration-200 p-2 rounded-[18px] font-medium text-white">
+            <div 
+            onClick={()=>{
+              navigate("/LoginPage");
+            }}
+            className="hover:cursor-pointer mx-3 p-3 w-[80px] rounded-md transition-all duration-200 bg-black bg-opacity-50 hover:bg-opacity-75 text-sm md:text-base hover:text-[#f87058] border-[1px] border-white border-opacity-5 hover:border-opacity-15 ">
+              Login
+            </div>
+            <div
+            onClick={()=>{
+              navigate(-1);
+            }}
+            className="hover:cursor-pointer mx-3 p-3 w-[80px] rounded-md transition-all duration-200 bg-black bg-opacity-50 hover:bg-opacity-75 text-sm md:text-base hover:text-[#f87058] border-[1px] border-white border-opacity-5 hover:border-opacity-15 ">
               Go Back
-            </button>
-          </NavLink>
+            </div>
         </div>
+        </div>
+      </div>
       </div>
     );
 }
