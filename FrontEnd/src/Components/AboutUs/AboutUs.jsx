@@ -2,7 +2,7 @@ import NavBar from "../HomePage/NavBar";
 import Footer from "../HomePage/Footer";
 import BgImage1 from "./fast-food-2132863_1920.jpg";
 import BgImage2 from "./food-6697405_1920.jpg";
-import BgImage3 from "./sandwich-2301387_1920.jpg";
+import BgImage3 from "./fresh-sandwiches-arrangement-wooden-background.jpg";
 import BgImage4 from "./toast-6011147_1920.jpg";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -143,12 +143,12 @@ export default function AboutUs() {
       <div className="flex flex-col min-h-full h-screen">
         <NavBar />
         <div
-          className="h-[88%] flex text-white items-center bg-cover bg-center transition-all duration-1000"
+          className="h-screen min-h-full flex text-white items-center justify-center bg-cover bg-center transition-all duration-1000"
           style={{
             backgroundImage: `url(${images[currentImageIndex]})`,
           }}
         >
-          <div className="flex flex-col sm:justify-between bg-black bg-opacity-35 min-h-full text-center text-xs sm:text-sm md:text-base">
+          <div className="flex flex-col justify-evenly bg-black bg-opacity-35 min-h-full text-center text-xs sm:text-sm md:text-base">
             <div>
               <h1 className="font-bold text-2xl sm:text-3xl mt-[2%]">
                 About Us
@@ -156,7 +156,7 @@ export default function AboutUs() {
 
               <p className="p-2 lg:text-xl font-normal">
                 Welcome to JJRSandwiches, where the art of sandwich-making meets
-                the joy of community, sharing, and food!
+                the joy of community!
               </p>
             </div>
             <div className="flex flex-row h-[350px] sm:h-[285px] items-center text-center mx-2 lg:mx-[20%] p-3 border-[1px] border-white rounded-[24px] bg-black bg-opacity-15">
