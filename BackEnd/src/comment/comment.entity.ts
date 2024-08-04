@@ -1,6 +1,6 @@
-import { Post } from 'src/posts/post.entity';
-import { SubComment } from 'src/sub-comment/sub-comment.entity';
-import { User } from 'src/users/user.entity';
+import { Post } from '../posts/post.entity';
+import { SubComment } from '../sub-comment/sub-comment.entity';
+import { User } from '../users/user.entity';
 import {
     Entity,
     Column,

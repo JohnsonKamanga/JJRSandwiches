@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { Recipe } from './recipe.entity';
-import { IngredientsService } from 'src/ingredient/ingredient.service';
-import { InstructionsService } from 'src/instruction/instruction.service';
+import { IngredientsService } from '../ingredient/ingredient.service';
+import { InstructionsService } from '../instruction/instruction.service';
 
 @Injectable()
 export class RecipeService {

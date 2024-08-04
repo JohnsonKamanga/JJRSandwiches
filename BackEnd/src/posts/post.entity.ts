@@ -1,7 +1,5 @@
-import { truncate } from 'fs';
-import { Comment } from 'src/comment/comment.entity';
-import { Community } from 'src/communities/community.entity';
-import { User } from 'src/users/user.entity';
+import { Community } from '../communities/community.entity';
+import { User } from '../users/user.entity';
 import {
   Entity,
   UpdateDateColumn,
@@ -9,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   ManyToOne,
-  OneToMany
 } from 'typeorm';
 
 @Entity()

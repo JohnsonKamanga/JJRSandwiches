@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { genSalt, hash } from 'bcrypt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { readFileSync } from 'fs';
@@ -34,7 +34,7 @@ export class UsersController {
     @Get('profile-picture/:username')
     async getProfilePicture(@Param('username')username: string, @Res()res : Response ){
         const user = await this.userService.findOne(username);
-        let path = 'src/uploads/profile-pictures/default-user-picture.jpg';
+        let path = '../uploads/profile-pictures/default-user-picture.jpg';
         if(user.profilePicture !== '')
             path = user.profilePicture;
         const file = readFileSync(path);
@@ -57,7 +57,7 @@ export class UsersController {
             filename:(req,file,cb)=>{
                 cb(null,Date.now() + extname(file.originalname));
             },
-            destination:"src/uploads/profile-pictures"
+            destination:"../uploads/profile-pictures"
         })
     }))
     async createUser(
@@ -79,7 +79,7 @@ export class UsersController {
             filename:(req,file,callback)=>{
                 callback(null,Date.now() + extname(file.originalname));
             },
-            destination:"src/uploads/profile-pictures"
+            destination:"../uploads/profile-pictures"
         })
     }))
     @Put(':id')

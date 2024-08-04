@@ -1,8 +1,8 @@
-import { Comment } from "src/comment/comment.entity";
-import { Community } from "src/communities/community.entity";
-import { Post } from "src/posts/post.entity";
-import { Recipe } from "src/recipe/recipe.entity";
-import { SubComment } from "src/sub-comment/sub-comment.entity";
+import { Comment } from "../comment/comment.entity";
+import { Community } from "../communities/community.entity";
+import { Post } from "../posts/post.entity";
+import { Recipe } from "../recipe/recipe.entity";
+import { SubComment } from "../sub-comment/sub-comment.entity";
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from "typeorm";
 
 @Entity()
