@@ -3,8 +3,8 @@ import { RecipeController } from './recipe.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recipe } from './recipe.entity';
 import { RecipeService } from './recipe.service';
-import { IngredientsModule } from 'src/ingredient/ingredient.module';
-import { InstructionsModule } from 'src/instruction/instruction.module';
+import { IngredientsModule } from '../ingredient/ingredient.module';
+import { InstructionsModule } from '../instruction/instruction.module';
 
 @Module({
   imports: [IngredientsModule, InstructionsModule, TypeOrmModule.forFeature([Recipe])],

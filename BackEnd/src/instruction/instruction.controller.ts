@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
-import { InstructionsService } from 'src/instruction/instruction.service';
+import { InstructionsService } from './instruction.service';
 
 @Controller('instruction')
 export class InstructionsController {
