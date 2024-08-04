@@ -5,7 +5,7 @@ import Footer from "./Footer";
 export default function HomePage() {
   return (
     <div>
-    <div className="flex flex-col min-h-full h-screen min-w-full w-fit">
+    <div className="flex flex-col min-h-full h-screen min-w-full">
       <NavBar />
       <Main />
       <Footer />
