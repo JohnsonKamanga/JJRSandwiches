@@ -19,11 +19,13 @@ import { Ingredient } from "../Recipes/Ingredients";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 export default function EditRecipe() {
-  const [recipe, imageURL ] = useLoaderData();
+  const [recipe, imageURL] = useLoaderData();
   const navigate = useNavigate();
   const [decodedToken, setDecodedToken] = useState();
   const [name, setName] = useState(recipe.name);
-  const [estimatedTime, setEstimatedTime] = useState(recipe.estimatedPreparationTime);
+  const [estimatedTime, setEstimatedTime] = useState(
+    recipe.estimatedPreparationTime
+  );
   const [ingredient, setIngredient] = useState("");
   const [editIngredient, setEditIngredient] = useState();
   const [ingredientQuantity, setIngredientQuantity] = useState("");
@@ -34,6 +36,10 @@ export default function EditRecipe() {
   const [editInstruction, setEditInstruction] = useState();
   const [instructions, setInstructions] = useState(recipe.instructions);
   const instructionsRef = useRef(instructions);
+  const [ingredientsToBeDeleted, setIngredientsToBeDeleted] = useState([]);
+
+  const [instructionsToBeDeleted, setInstructionsToBeDeleted] = useState([]);
+
   const [displayIndex, setDisplayIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const inputStyle =
@@ -46,37 +52,33 @@ export default function EditRecipe() {
     <div className="text-2xl text-[#ff0000]">{errorMessage}</div>,
   ];
 
-  const handleIngredientsUpdate = ()=>{
-    const newIngredient = new Ingredient(
-      ingredient,
-      ingredientQuantity
-    );
-    if(!editIngredient){
+  const handleIngredientsUpdate = () => {
+    const newIngredient = new Ingredient(ingredient, ingredientQuantity);
+    if (!editIngredient) {
       ingredientsRef.current = [...ingredients, newIngredient];
       setIngredients([...ingredients, newIngredient]);
-    }
-    else{
+    } else {
       let copy = [];
-      for(let i = 0 ; i < ingredients.length ; i++)
-        copy.push(ingredients[i]);
-    const targetIngredientIndex = ingredients.indexOf(editIngredient);
-    editIngredient?.id ?
-      copy[targetIngredientIndex] = {...newIngredient, id: editIngredient?.id}
-      :
-      copy[targetIngredientIndex] = newIngredient;
+      for (let i = 0; i < ingredients.length; i++) copy.push(ingredients[i]);
+      const targetIngredientIndex = ingredients.indexOf(editIngredient);
+      editIngredient?.id
+        ? (copy[targetIngredientIndex] = {
+            ...newIngredient,
+            id: editIngredient?.id,
+          })
+        : (copy[targetIngredientIndex] = newIngredient);
       ingredientsRef.current = copy;
       setIngredients(copy);
       setEditIngredient();
     }
-      setIngredient("");
-      setIngredientQuantity("");
-  }
-
+    setIngredient("");
+    setIngredientQuantity("");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   const loadingScreen =  document.getElementById("loadingScreen");
-   loadingScreen.style.display = "flex";
+    const loadingScreen = document.getElementById("loadingScreen");
+    loadingScreen.style.display = "flex";
     const newRecipe = new Recipe(
       name,
       "",
@@ -87,34 +89,37 @@ export default function EditRecipe() {
 
     newRecipe.user = recipe.user;
     newRecipe.id = recipe.id;
+    newRecipe.toBeDeleted = {
+      instructions: instructionsToBeDeleted,
+      ingredients: ingredientsToBeDeleted,
+    };
 
     axios
       .put(`${baseurl}/recipes/${recipe.id}`, newRecipe)
       .then((res1) => {
-        if(image !== imageURL)
-        axios
-          .putForm(`${baseurl}/recipes/${recipe.id}`, {
-            image,
-          })
-          .then((res2) => {
-            navigate(`/Recipes/recipe-instructions/${recipe.id}`);
-          })
-          .catch((err) => {
-            console.error(err);
-            setErrorMessage(`${err.code} : ${err.message}`);
-            setDisplayIndex(1);
-          });
-          navigate(`/Recipes/recipe-instructions/${recipe.id}`);
+        if (image !== imageURL)
+          axios
+            .putForm(`${baseurl}/recipes/${recipe.id}`, {
+              image,
+            })
+            .then((res2) => {
+              navigate(`/Recipes/recipe-instructions/${recipe.id}`);
+            })
+            .catch((err) => {
+              console.error(err);
+              setErrorMessage(`${err.code} : ${err.message}`);
+              setDisplayIndex(1);
+            });
+        navigate(`/Recipes/recipe-instructions/${recipe.id}`);
       })
       .catch((err) => {
         console.error(err);
         setErrorMessage(`${err.code} : ${err.message}`);
-            setDisplayIndex(1);
+        setDisplayIndex(1);
       });
   };
 
   const drawIngredients = (ingredient) => {
-    
     return (
       <div
         key={Math.random()}
@@ -125,11 +130,15 @@ export default function EditRecipe() {
             icon={faMinusCircle}
             onClick={() => {
               let copy = [];
-              for(let i = 0 ; i < ingredients.length ; i++){
-                copy.push(ingredients[i]);
-              }
+              copy.push(...ingredients);
               const index = ingredients.indexOf(ingredient);
-              copy.splice(index, 1);
+              const removed = copy.splice(index, 1);
+              if (removed[0]?.id) {
+                setIngredientsToBeDeleted([
+                  ...ingredientsToBeDeleted,
+                  ...removed,
+                ]);
+              }
               ingredientsRef.current = copy;
               setIngredients(copy);
             }}
@@ -161,19 +170,27 @@ export default function EditRecipe() {
         className="bg-transparent flex flex-row items-center text-white placeholder:text-white placeholder:text-opacity-70 transition-all duration-200 font-light p-3 lg:p-[17px] hover:bg-white hover:bg-opacity-10"
       >
         <div className="w-[20%]">
-          <FontAwesomeIcon 
-          className="hover:cursor-pointer transition-all hover:text-[#f87058]"
-          onClick={() => {
-            let copy = [];
-            for(let i = 0 ; i < instructions.length ; i++){
-              copy.push(instructions[i]);
-            }
-            const index = instructions.indexOf(instruction);
-            copy.splice(index, 1);
-            instructionsRef.current = copy;
-            setInstructions(copy);
-          }}
-          icon={faMinusCircle}/>
+          <FontAwesomeIcon
+            className="hover:cursor-pointer transition-all hover:text-[#f87058]"
+            onClick={() => {
+              let copy = [];
+              for (let i = 0; i < instructions.length; i++) {
+                copy.push(instructions[i]);
+              }
+              const index = instructions.indexOf(instruction);
+              const removed = copy.splice(index, 1);
+              //id of instruction is defined only if was retrived from the database
+              if (removed[0]?.id) {
+                setInstructionsToBeDeleted([
+                  ...instructionsToBeDeleted,
+                  ...removed,
+                ]);
+              }
+              instructionsRef.current = copy;
+              setInstructions(copy);
+            }}
+            icon={faMinusCircle}
+          />
         </div>
         <div className="w-[60%]">{instruction.instruction}</div>
         <div className="w-[20%]">
@@ -185,12 +202,12 @@ export default function EditRecipe() {
             }}
             className="hover:cursor-pointer transition-all hover:text-[#f87058]"
           />
-          </div>
+        </div>
       </div>
     );
   };
 
- /* useEffect(() => {
+  /* useEffect(() => {
     axios
       .post(`${baseurl}/auth/decode`, {
         access_token: token?.data?.access_token,
@@ -207,21 +224,16 @@ export default function EditRecipe() {
       });
   }, []);
 */
-  useEffect(()=>{
-    const tableTopHeight =
-                  document.getElementById("table").offsetTop;
-                const tableHeight =
-                  document.getElementById("table").offsetHeight;
-                const mainHeight =
-                  document.getElementById("main").offsetHeight;
-                const deltaHeight =
-                  tableHeight + tableTopHeight - mainHeight;
-                  if(deltaHeight > 0)
-                document.getElementById("main").style.height = `${
-                  mainHeight + deltaHeight
-                }px`;
-
-  },[ingredients, instructions])
+  useEffect(() => {
+    const tableTopHeight = document.getElementById("table").offsetTop;
+    const tableHeight = document.getElementById("table").offsetHeight;
+    const mainHeight = document.getElementById("main").offsetHeight;
+    const deltaHeight = tableHeight + tableTopHeight - mainHeight;
+    if (deltaHeight > 0)
+      document.getElementById("main").style.height = `${
+        mainHeight + deltaHeight
+      }px`;
+  }, [ingredients, instructions]);
 
   return (
     <div>
@@ -366,25 +378,31 @@ export default function EditRecipe() {
                   <div
                     className="hover:cursor-pointer h-8 w-8 flex items-center justify-center hover:bg-white hover:bg-opacity-30 rounded-lg"
                     onClick={() => {
-                      if(!editInstruction){
-                      instructionsRef.current = [
-                        ...instructions,
-                        { instruction: instruction },
-                      ];
-                      setInstructions([
-                        ...instructions,
-                        { instruction: instruction },
-                      ]);
-                    }
-                    else{
-                      let copy=[];
-                      for(let i = 0 ; i < instructions.length ; i++)
-                        copy.push(instructions[i]);
-                      copy[instructions.indexOf(editInstruction)] = {instruction};
-                      instructionsRef.current = copy;
-                      setInstructions(copy); 
-                      setEditInstruction();
-                    }
+                      if (!editInstruction) {
+                        instructionsRef.current = [
+                          ...instructions,
+                          { instruction: instruction },
+                        ];
+                        setInstructions([
+                          ...instructions,
+                          { instruction: instruction },
+                        ]);
+                      } else {
+                        let copy = [];
+                        for (let i = 0; i < instructions.length; i++)
+                          copy.push(instructions[i]);
+                        const targetInstructionIndex =
+                          instructions.indexOf(editInstruction);
+                        editInstruction?.id
+                          ? (copy[targetInstructionIndex] = {
+                              instruction,
+                              id: editInstruction?.id,
+                            })
+                          : (copy[targetInstructionIndex] = { instruction });
+                        instructionsRef.current = copy;
+                        setInstructions(copy);
+                        setEditInstruction();
+                      }
                       setInstruction("");
                     }}
                   >
@@ -407,8 +425,7 @@ export default function EditRecipe() {
                 <h2 className=" text-lg sm:text-xl md:text-2xl lg:text-3xl p-3 border-b-[1px] border-white">
                   Ingredients
                 </h2>
-                <div
-                className="text-xs sm:text-base">
+                <div className="text-xs sm:text-base">
                   {ingredientsRef.current.map(drawIngredients)}
                 </div>
               </div>
@@ -425,8 +442,8 @@ export default function EditRecipe() {
               id="loadingScreen"
               className="hidden justify-center items-center  absolute top-0 left-0 h-full w-full bg-black bg-opacity-70 backdrop-blur-3xl"
             >
-                <div className="h-[250px] w-[250px] rounded-md bg-white bg-opacity-35 border-[1px] border-white text-xs sm:text-sm md:text-base border-opacity-30 p-2 text-center flex flex-col items-center justify-center">
-              {display[displayIndex]}
+              <div className="h-[250px] w-[250px] rounded-md bg-white bg-opacity-35 border-[1px] border-white text-xs sm:text-sm md:text-base border-opacity-30 p-2 text-center flex flex-col items-center justify-center">
+                {display[displayIndex]}
               </div>
             </div>
           </div>
