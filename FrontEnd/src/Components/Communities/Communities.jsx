@@ -9,6 +9,7 @@ import axios from "axios";
 import NewCommunity from "./NewCommunitt";
 import { baseurl } from "../../routes";
 import { UserContext } from "../Accounts/UserContext";
+import BgImage from "./two-sandwiches-tablecloth-with-copy-space.jpg"
 
 export default function Communities() {
   const [communities, setCommunities] = useState([]);
@@ -106,8 +107,12 @@ export default function Communities() {
     <div>
       <div className="flex flex-col min-h-full h-screen">
         <NavBar />
-        <div className=" h-full sm:h-fit bg-gray-600 bg-opacity-65">
-          <div>
+        <div className=" h-full sm:h-fit bg-fixed bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${BgImage})`,
+        }}
+        >
+          <div className="min-h-screen bg-black bg-opacity-30 backdrop-blur-[4px]">
             <SearchBar  context="communities" setResults={setCommunities} loadingState={loading} setLoadingState={setLoading} />
             <div className="flex flex-row justify-center p-2 w-full ">
               <div className=" sm:mx-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
