@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import BgImage1 from "./pexels-alex-green-5692286.jpg";
 import BgImage2 from "./pexels-anton-porsche-37909-133578.jpg";
-import BgImage3 from "./pexels-brigitte-tohm-36757-350343.jpg";
+import BgImage3 from "./fresh-sandwiches-arrangement-wooden-background.jpg";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../Accounts/UserContext";
 
@@ -21,7 +21,7 @@ export default function Main() {
 
   return (
     <div
-      className="h-[88%] flex items-center bg-cover bg-center transition-all duration-1000"
+      className="h-screen min-h-full flex items-center bg-cover bg-center transition-all duration-1000"
       style={{
         backgroundImage: `url(${images[currentImageIndex]})`,
       }}
