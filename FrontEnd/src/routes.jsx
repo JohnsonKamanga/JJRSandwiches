@@ -18,7 +18,7 @@ import ViewPosts from "./Components/Post/ViewPosts";
 import EditRecipe from "./Components/Recipes/EditRecipe";
 import Attributions from "./Components/Attributions/Attributions";
 
-export const baseurl = 'https://jjr-sandwiches-backend.vercel.app/api';
+export const baseurl = 'https://jjrsandwiches-backend.onrender.com/api';
 
 export const router = createBrowserRouter([
   {
