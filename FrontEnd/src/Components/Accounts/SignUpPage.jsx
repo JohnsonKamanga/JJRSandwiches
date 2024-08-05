@@ -15,7 +15,9 @@ export default function SignUpPage() {
   const [userEmail, setUserEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameLoading, setUsernameLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [validationVariables, setValidationVariables] = useState({
     isEmailValid: false,
     isPasswordsEqual: false,
@@ -78,15 +80,15 @@ export default function SignUpPage() {
           backgroundImage: `url(${BgImage})`,
         }}
       >
-        <div className="flex flex-col p-5 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
-          <div className="mb-[7%] mt-[3%] sm:my-[2%] lg:my-[2px] xl:my-[0.5%] p-2 rounded-[18px] w-[80%] lg:w-[50%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[50%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
+        <div className="flex flex-col p-2 min-h-full h-screen items-center backdrop-blur-[6px] bg-black bg-opacity-35">
+          <div className="mb-[3%] mt-[3%] sm:my-[2%] lg:my-[2px] xl:my-[0.5%] p-2 rounded-[18px] w-[80%] lg:w-[50%] h-[15%] sm:h-[15%] md:h-[20%] lg:h-[20%] xl:w-[50%] xl:h-[25%] bg-black bg-opacity-35 flex items-center">
             <NavLink to="/HomePage">
               <img src={Logo} alt="logo" />
             </NavLink>
           </div>
 
           <div className="text-center text-white">
-            <h1 className="mb-[7%] md:mb-[4%] lg:mb-[2%] text-2xl md:text-3xl lg:text-5xl font-bold">
+            <h1 className="mb-[3%] md:mb-[4%] lg:mb-[2%] text-2xl md:text-3xl lg:text-5xl font-bold">
               Welcome to JJRSandwiches!
             </h1>
           </div>
@@ -170,6 +172,7 @@ export default function SignUpPage() {
                   id="username"
                   value={username}
                   onChange={(e) => {
+                    setUsernameLoading(true);
                     setUsername(e.target.value);
                     const potentialExistingUser = axios.get(
                       `${baseurl}/users/${e.target.value}`
@@ -198,6 +201,7 @@ export default function SignUpPage() {
                           ...validationVariables,
                           isUsernameValid: true,
                         });
+                        setUsernameLoading(false)
                       } else {
                         setDisplayMessages({
                           ...displayMessages,
@@ -213,6 +217,7 @@ export default function SignUpPage() {
                           ...validationVariables,
                           isUsernameValid: false,
                         });
+                        setUsernameLoading(false);
                       }
                     });
                   }}
@@ -221,7 +226,13 @@ export default function SignUpPage() {
                 ></input>
               </div>
               <div id="username_validation" className=" opacity-0 mb-2">
-                {displayMessages.username}
+              {usernameLoading?
+                <div className="animate-pulse font-thin text-yellow-500">
+                validating username...
+                </div>
+              :  
+                <div>{displayMessages.username}</div>
+              }
               </div>
               <div className="flex flex-row items-center h-[20%] lg:h-[50px] bg-white bg-opacity-20 rounded-[18px]">
                 <label
@@ -229,7 +240,61 @@ export default function SignUpPage() {
                   className="p-2 w-[160px] font-medium text-white text-end border-r-[1px]"
                 >
                   Password
-                </label>
+                </label>{
+                showPassword?
+                <input
+                  id="user_password"
+                  type="text"
+                  autoComplete="off"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (confirmPassword === "" && e.target.value === "") {
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "0";
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.opacity = "0";
+                    } else if (
+                      confirmPassword.length > 0 &&
+                      e.target.value === ""
+                    ) {
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "0";
+                      setDisplayMessages({
+                        ...displayMessages,
+                        confirmPassword: "passwords must be equal",
+                      });
+                    } else if (e.target.value.length < 6) {
+                      document.getElementById(
+                        "password_validation"
+                      ).style.color = "red";
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "1";
+                      setDisplayMessages({
+                        ...displayMessages,
+                        password: "Password should be at least 6 characters",
+                      });
+                    } else {
+                      document.getElementById(
+                        "password_validation"
+                      ).style.color = "green";
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "1";
+                      setDisplayMessages({
+                        ...displayMessages,
+                        password: "Password is long enough",
+                      });
+                    }
+                  }}
+                  placeholder="Enter your password"
+                  className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                ></input>
+                :
                 <input
                   id="user_password"
                   type="password"
@@ -281,6 +346,7 @@ export default function SignUpPage() {
                   placeholder="Enter your password"
                   className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
+                }
               </div>
               <div id="password_validation" className="mb-2 opacity-0">
                 {displayMessages.password}
@@ -292,7 +358,59 @@ export default function SignUpPage() {
                   className="p-2 w-[160px] font-medium text-white text-end border-r-[1px]"
                 >
                   Confirm password
-                </label>
+                </label>{
+                showPassword?
+                <input
+                  id="confirm_user_password"
+                  type="text"
+                  autoComplete="off"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (password === "" && e.target.value === "") {
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.opacity = "0";
+                      document.getElementById(
+                        "password_validation"
+                      ).style.opacity = "0";
+                    } else if (password === e.target.value) {
+                      setValidationVariables({
+                        ...validationVariables,
+                        isPasswordsEqual: true,
+                      });
+                      setDisplayMessages({
+                        ...displayMessages,
+                        confirmPassword: "passwords are the same",
+                      });
+
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.color = "green";
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.opacity = "1";
+                    } else {
+                      setValidationVariables({
+                        ...validationVariables,
+                        isPasswordsEqual: false,
+                      });
+                      setDisplayMessages({
+                        ...displayMessages,
+                        confirmPassword: "passwords must be equal",
+                      });
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.color = "red";
+                      document.getElementById(
+                        "password_confirmation"
+                      ).style.opacity = "1";
+                    }
+                  }}
+                  placeholder="Re-enter your password"
+                  className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
+                ></input>
+                :
                 <input
                   id="confirm_user_password"
                   type="password"
@@ -342,10 +460,24 @@ export default function SignUpPage() {
                   placeholder="Re-enter your password"
                   className="bg-transparent p-3 lg:p-[18px] h-full font-light placeholder:text-white placeholder:text-opacity-70 text-white transition-all duration-200  hover:bg-white hover:bg-opacity-10  outline-none border-none border-0 border-opacity-0 rounded-r-[18px] w-[80%]"
                 ></input>
+                }
               </div>
               <div id="password_confirmation" className=" opacity-0">
                 {displayMessages.confirmPassword}
               </div>
+              <div className="flex items-center w-[125px] sm:w-[150px]  justify-end text-white font-extralight">
+                  <label htmlFor="show_password" className="mr-2 transition-all hover:cursor-pointer hover:text-[#f87058] ">
+                    Show passwords
+                  </label>
+                  <input
+                    id="show_password"
+                    type="checkbox"
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                    className="accent-[#f87058]"
+                  ></input>
+                </div>
               <div className="flex mb-3 mt-1 text-white font-extralight items-center justify-between"></div>
               <button
                 id="signUpButton"
