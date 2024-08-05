@@ -26,7 +26,7 @@ export default function UploadPost() {
   const [editIngredient, setEditIngredient] = useState();
   const [ingredientQuantity, setIngredientQuantity] = useState("");
   const [ingredients, setIngredients] = useState([]);
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState();
   const ingredientsRef = useRef(ingredients);
   const [instruction, setInstruction] = useState("");
   const [editInstruction, setEditInstruction] = useState();
@@ -97,6 +97,7 @@ export default function UploadPost() {
       .then((recipe) => {
         console.log("recipe uploaded successfully");
         console.log("now updating picture");
+        if(image)
         axios
           .putForm(`${baseurl}/recipes/${recipe.data.id}`, {
             image,
