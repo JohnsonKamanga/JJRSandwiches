@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUserCircle, faX, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../../Logos/logo-white-font-no-background.png";
@@ -8,6 +8,7 @@ import { UserContext } from "../Accounts/UserContext";
 
 export default function NavBar() {
   const {token} = useContext(UserContext);
+  const navigate = useNavigate();
   const [dropDownIsOpen, setDropDownIsOpen] = useState(false);
   const [showHamburger, setShowHamburger] = useState(false);
   const [windowSize, setWindowSize] = useState(window.innerWidth);
@@ -31,12 +32,11 @@ export default function NavBar() {
   return (
     <div className="flex z-30 flex-row justify-between sm:justify-normal bg-gray-600 text-white min-h-[7%] sm:h-[8%] md:h-[8%] lg:h-[8%] xl:h-[8%]">
       <div className="flex items-center justify-start w-[47%] sm:h-full sm:w-fit">
-        <NavLink to="/HomePage">
       <img
+        onClick={()=>navigate("/HomePage")}
         src={Logo}
         className="bg-transparent border-white border-opacity-50 sm:border-r-[1px] p-[9px] h-full "
       />
-      </NavLink>
       </div>
       <div
       id="navBarOptions"
