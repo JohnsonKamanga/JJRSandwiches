@@ -16,10 +16,12 @@ import { Recipe } from "../Recipes/Recipe";
 import BgImage from "../Recipes/image2.jpg";
 import { baseurl } from "../../routes";
 import { Ingredient } from "../Recipes/Ingredients";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadPost() {
   const { token } = useContext(UserContext);
   const [decodedToken, setDecodedToken] = useState();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
   const [ingredient, setIngredient] = useState("");
@@ -97,13 +99,13 @@ export default function UploadPost() {
       .then((recipe) => {
         console.log("recipe uploaded successfully");
         console.log("now updating picture");
-        if(image)
+        if(image){
         axios
           .putForm(`${baseurl}/recipes/${recipe.data.id}`, {
             image,
           })
           .then((res) => {
-            element.style.display = "none";
+            navigate(`/Recipes/recipe-instructions/${recipe.data.id}`);
           })
           .catch((err) => {
             console.error(err);
@@ -120,7 +122,10 @@ export default function UploadPost() {
             setDisplayIndex(1);
             })
           }
-        );
+        );}
+        else{
+          navigate(`/Recipes/recipe-instructions/${recipe.data.id}`);
+        }
       })
       .catch((err) => {
         console.log("an error was encountered while uploading the recipe");
