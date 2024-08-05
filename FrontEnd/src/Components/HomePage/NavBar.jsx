@@ -31,13 +31,16 @@ export default function NavBar() {
   return (
     <div className="flex z-30 flex-row justify-between sm:justify-normal bg-gray-600 text-white min-h-[7%] sm:h-[8%] md:h-[8%] lg:h-[8%] xl:h-[8%]">
       <div className="flex items-center justify-start w-[47%] sm:h-full sm:w-fit">
+        <NavLink to="/HomePage">
       <img
         src={Logo}
         className="bg-transparent border-white border-opacity-50 sm:border-r-[1px] p-[9px] h-full "
-      /></div>
+      />
+      </NavLink>
+      </div>
       <div
       id="navBarOptions"
-      className="h-0 overflow-hidden sm:h-full flex absolute top-[6.5%] sm:top-0 sm:static sm:flex flex-col sm:flex-row items-center w-full sm:w-[75%] backdrop-blur-[6px] sm:backdrop-blur-0 bg-inherit sm:bg-transparent transition-all  font-medium text-center text-[10px] sm:text-xs md:text-sm xl:text-base p-1 sm:p-2">
+      className="h-0 z-30 overflow-hidden sm:h-full flex absolute top-[6.5%] sm:top-0 sm:static sm:flex flex-col sm:flex-row items-center w-full sm:w-[75%] backdrop-blur-[6px] sm:backdrop-blur-0 bg-inherit sm:bg-transparent transition-all  font-medium text-center text-[10px] sm:text-xs md:text-sm xl:text-base p-1 sm:p-2">
         <div className=" hover:text-[#f29260] transition-colors duration-[120ms] mt-[0.5%] sm:mt-0 mx-[1.5%] sm:mx-[3%] flex items-center hover:cursor-pointer">
           <NavLink
             to="/HomePage"
