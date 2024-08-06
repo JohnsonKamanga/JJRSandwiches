@@ -13,10 +13,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import { baseurl } from "../../routes";
+import DefaultRecipePicture from "./default-recipe-picture.jpg";
 
 export default function RecipeInstructions() {
   const recipe = useLoaderData();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(
+    recipe?.image && recipe?.image !== "" ? recipe?.image : DefaultRecipePicture
+  );
   const drawIngredients = (ingredient) => {
     return (
       <div
@@ -44,17 +47,6 @@ export default function RecipeInstructions() {
     );
   };
 
-  useEffect(() => {
-    axios
-      .get(`${baseurl}/recipes/recipe-pictures/${recipe.id}`, {
-        responseType: "blob",
-      })
-      .then((img) => {
-        setImage(URL.createObjectURL(img.data));
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
   return (
     <div className="min-h-full h-screen">
       <NavBar />
@@ -69,18 +61,22 @@ export default function RecipeInstructions() {
           const tableHeight = document.getElementById("table").offsetHeight;
           const mainHeight = document.getElementById("main").offsetHeight;
           const deltaHeight = tableHeight + tableTopHeight - mainHeight;
-          if(deltaHeight > 0)
-          document.getElementById("main").style.height = `${mainHeight + deltaHeight}px`;
+          if (deltaHeight > 0)
+            document.getElementById("main").style.height = `${
+              mainHeight + deltaHeight
+            }px`;
         }}
       >
         <div className="min-h-full h-screen backdrop-blur-[6px]">
           <div className="p-[2%]">
             <div className="p-3 text-white w-fit flex flex-row rounded-[18px] bg-black bg-opacity-40">
-             <div className=""> <img
-                src={image}
-                alt="recipe image"
-                className="rounded-[16px] max-h-[200px] sm:h-[200px]"
-              />
+              <div className="">
+                {" "}
+                <img
+                  src={image}
+                  alt="recipe image"
+                  className="rounded-[16px] max-h-[200px] sm:h-[200px]"
+                />
               </div>
               <div className="ml-3 flex flex-col justify-end">
                 <h1 className="font-bold p-2 text-xl lg:text-[44px]">

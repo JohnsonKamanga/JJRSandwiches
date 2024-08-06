@@ -7,27 +7,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { baseurl } from "../../routes";
+import DefaultProfilePicture from "./default-user-picture.jpg";
 
 export default function MiniAccountTab(props) {
   const post = props.post;
   const navigate = useNavigate();
   const [windowsize, setWindowSize] = useState(window.innerWidth);
-  const getImage = (user) => {
-    axios
-      .get(`${baseurl}/users/profile-picture/${user.username}`, {
-        responseType: "blob",
-      })
-      .then((pic) => {
-        const element = document.getElementById(`${user.id}`);
 
-        if(element){
-          element.src = URL.createObjectURL(
-            pic.data
-          );
-        }
-      })
-      .catch((err) => console.error(err));
-  };
   useEffect(() => {
     window.addEventListener("resize", () => setWindowSize(window.innerWidth));
     return window.removeEventListener("resize", () => {
@@ -52,7 +38,12 @@ export default function MiniAccountTab(props) {
             <div className="flex flex-row items-center justify-center rounded-full p-[2px] w-[35px] h-[35px] bg-gray-600 bg-opacity-40">
               <img
                 id={post.user.id}
-                onLoad={getImage(post.user)}
+                src={
+                  post?.user?.profilePicture && post?.user?.profilePicture != '' ?
+                          post?.user?.profilePicture
+                          :
+                          DefaultProfilePicture
+                }
                 className="h-fit rounded-full "
               />
             </div>
@@ -74,7 +65,12 @@ export default function MiniAccountTab(props) {
           {" "}
           <img
             id={post.user.id}
-            onLoadStart={getImage(post.user)}
+            src={
+              post?.user?.profilePicture && post?.user?.profilePicture != '' ?
+                      post?.user?.profilePicture
+                      :
+                      DefaultProfilePicture
+            }
             className="h-fit rounded-full "
           />
         </div>

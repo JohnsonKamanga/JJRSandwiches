@@ -7,6 +7,7 @@ import axios from "axios";
 import { wait } from "../../utilities";
 import { UserContext } from "./UserContext";
 import { baseurl } from "../../routes";
+import DefaultProfilePicture from "./default-user-picture.jpg";
 
 export default function Bio() {
   const { token } = useContext(UserContext);
@@ -84,23 +85,15 @@ export default function Bio() {
             setBio(userData?.data?.bio);
             setDob(userData?.data?.dob);
             setLocation(userData?.data?.location);
-            axios.get(`${baseurl}/users/profile-picture/${dToken?.data?.username}`,
-              {
-                responseType: "blob"
-              }
-            )
-            .then((pfp)=>{
-              const url = URL.createObjectURL(pfp.data)
-              setProfilePicture(url);
+            setProfilePicture(userData?.data?.profilePicture && userData?.data?.profilePicture != '' ?
+              userData?.data?.profilePicture
+              :
+              DefaultProfilePicture
+             );
             setRendering(false);
-            setError(false);})
-            .catch((err)=>{
-              console.error(err);
-              setRendering(false);
-              setError(true);
-            })
-          });
+            setError(false);
       })
+    })
       .catch((err) => {
         console.error(err);
         setRendering(false);
@@ -340,22 +333,19 @@ export default function Bio() {
                         setBio(userData?.data?.bio);
                         setDob(userData?.data?.dob);
                         setLocation(userData?.data?.location);
-                        axios.get(`${baseurl}/users/profile-picture/${decodedToken?.username}`,
-                          {
-                            responseType: "blob"
-                          }
-                        )
-                        .then((pfp)=>{
-                          const url = URL.createObjectURL(pfp.data)
-                          setProfilePicture(url);
+                        setProfilePicture(userData?.data?.profilePicture && userData?.data?.profilePicture != '' ?
+                          userData?.data?.profilePicture
+                          :
+                          DefaultProfilePicture
+                         );
                         setRendering(false);
-                        setError(false);})
-                        .catch((err)=>{
-                          console.error(err);
-                          setRendering(false);
-                          setError(true);
-                        })
-                      });
+                        setError(false);
+                      })
+                      .catch((err)=>{
+                        console.error(err);
+                        setRendering(false);
+                        setError(true);
+                      })
                       setEditable(false);
                     }}
                     >Cancel</div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faX, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { baseurl } from "../../routes";
+import DefaultProfilePicture from "../Accounts/default-user-picture.jpg";
 
 export default function Comments(props) {
   const comments = props.comments;
@@ -21,22 +22,6 @@ export default function Comments(props) {
     </div>
   );
 
-  const getImage = (user, elementID) => {
-    axios
-      .get(`${baseurl}/users/profile-picture/${user.username}`, {
-        responseType: "blob",
-      })
-      .then((pic) => {
-        const element = document.getElementById(`${elementID}`);
-        if(element){
-          element.src = URL.createObjectURL(
-            pic.data
-          );
-        }
-      })
-      .catch((err) => console.error(err));
-  };
-
   const drawComments = (comment) => {
     const time = new Date(comment.commentedAt).toLocaleTimeString();
     const timestamp = time.slice(0, 4) + time.slice(7);
@@ -52,7 +37,12 @@ export default function Comments(props) {
             <div className="h-[28px] w-[28px] flex items-center justify-center rounded-full bg-black bg-opacity-65 mr-2">
               <img
                 id={`${comment.id}`}
-                onLoadStart={getImage(comment.user, comment.id)}
+                src={
+                  comment?.user?.profilePicture && comment?.user?.profilePicture != '' ?
+                  comment?.user?.profilePicture
+                  :
+                  DefaultProfilePicture
+                }
                 className="rounded-full h-[20px]"
               />
             </div>

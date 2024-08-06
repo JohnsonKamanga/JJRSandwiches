@@ -13,6 +13,7 @@ import { wait } from "../../utilities";
 import axios from "axios";
 import { UserContext } from "../Accounts/UserContext";
 import { baseurl } from "../../routes";
+import DefaultCommunityPicture from "./default-community-picture.jpg";
 
 export default function CommunityPageNavBar(props) {
   const { token } = useContext(UserContext);
@@ -46,22 +47,6 @@ export default function CommunityPageNavBar(props) {
       });
   };
 
-  const getImage = (community) => {
-    axios
-      .get(`${baseurl}/communities/community-pictures/${community.id}`, {
-        responseType: "blob",
-      })
-      .then((pic) => {
-       const element = document.getElementById(`${community.id}`);
-       if(element){
-        element.src = URL.createObjectURL(
-          pic.data
-        );
-       }
-      })
-      .catch((err) => console.error(err));
-  };
-
   if(loading){
     return(
       <div className="z-30 absolute backdrop-blur-xl text-white top-0 left-0 h-full w-full flex flex-col items-center justify-center">
@@ -85,7 +70,12 @@ export default function CommunityPageNavBar(props) {
           <div className="flex items-center justify-center h-[30px] sm:h-[35px] min-w-[30px] sm:min-w-[35px] ml-2 bg-black bg-opacity-20 rounded-full ">
             <img
               id={community.id}
-              onLoadStart={getImage(community)}
+              src={
+                community.communityPicture && community.communityPicture !== ''?
+                community.communityPicture
+                :
+                DefaultCommunityPicture
+              }
               className="h-full rounded-full"
             />
           </div>

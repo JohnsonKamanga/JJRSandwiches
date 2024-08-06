@@ -13,23 +13,11 @@ import NewPost from "../Post/NewPost";
 import axios from "axios";
 import { baseurl } from "../../routes";
 import { UserContext } from "../Accounts/UserContext";
+import DefaultProfilePicture from "../Accounts/default-user-picture.jpg";
 
 export default function CommunityPage() {
   const [posts, community] = useLoaderData();
   const { token } = useContext(UserContext);
-  const getImage = (user, elementID) => {
-    axios
-      .get(`${baseurl}/users/profile-picture/${user.username}`, {
-        responseType: "blob",
-      })
-      .then((pic) => {
-        const element = document.getElementById(elementID)
-        if(element){
-        element.src = URL.createObjectURL(pic.data);
-      }
-      })
-      .catch((err) => console.error(err));
-  };
 
   const drawCommunityPosts = (post) => {
     const time = new Date(post.postedAt).toLocaleTimeString();
@@ -44,7 +32,12 @@ export default function CommunityPage() {
             <div className="h-[18px] w-[18px] lg:h-[30px] lg:w-[30px] rounded-full bg-black bg-opacity-30 mr-[2%] ml-[0.5%]">
             <img
               id={post.id}
-              onLoad={getImage(post.user, post.id)}
+              src={
+                post?.user?.profilePicture && post?.user?.profilePicture != '' ?
+                post?.user?.profilePicture
+                :
+                DefaultProfilePicture
+              }
               className="text-2xl h-full rounded-full"
             />
             </div>

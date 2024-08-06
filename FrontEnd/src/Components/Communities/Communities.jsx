@@ -9,7 +9,8 @@ import axios from "axios";
 import NewCommunity from "./NewCommunitt";
 import { baseurl } from "../../routes";
 import { UserContext } from "../Accounts/UserContext";
-import BgImage from "./two-sandwiches-tablecloth-with-copy-space.jpg"
+import BgImage from "./two-sandwiches-tablecloth-with-copy-space.jpg";
+import DefaultCommunityPicture from "./default-community-picture.jpg";
 
 export default function Communities() {
   const [communities, setCommunities] = useState([]);
@@ -17,15 +18,6 @@ export default function Communities() {
   const {token} = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState('');
   const [error, setError] = useState(false);
-  const getImage = (community)=>{
-    axios.get(`${baseurl}/communities/community-pictures/${community.id}`,{
-      responseType: "blob"
-    })
-    .then((pic)=>{
-      document.getElementById(`${community.id}`).src= URL.createObjectURL(pic.data);
-    })
-    .catch((err)=>console.error(err));
-  }
 
   const unsubscribe = () => {
     axios
@@ -55,7 +47,13 @@ export default function Communities() {
           <div className="flex flex-row items-center w-full sm:w-fit">
             <div className="w-[30%] flex items-center justify-center sm:mr-1 ">
               <div className="rounded-full h-[40px] w-[40px] sm:h-full sm:w-full flex items-center justify-center bg-black bg-opacity-60 p-1 sm:p-[6px] ">
-                <img className="h-full sm:h-fit sm:w-fit rounded-full" id={community.id} onLoadStart={getImage(community)} />
+                <img className="h-full sm:h-fit sm:w-fit rounded-full" id={community.id} 
+                src={
+                  community.communityPicture && community.communityPicture !== ''?
+                  community.communityPicture
+                  :
+                  DefaultCommunityPicture
+                } />
               </div>
             </div>
             <div className="m-[1px] sm:m-0 w-[70%]">

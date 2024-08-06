@@ -17,8 +17,9 @@ import axios from "axios";
 import ViewPosts from "./Components/Post/ViewPosts";
 import EditRecipe from "./Components/Recipes/EditRecipe";
 import Attributions from "./Components/Attributions/Attributions";
+import DefaultRecipePicture from "./Components/Recipes/default-recipe-picture.jpg";
 
-export const baseurl = 'https://jjrsandwiches-backend.onrender.com/api';
+export const baseurl = 'http://localhost:8000/api';
 
 export const router = createBrowserRouter([
   {
@@ -128,8 +129,10 @@ export const router = createBrowserRouter([
     element: <EditRecipe/>,
     loader: async({params})=>{
       const recipe = (await axios.get(`${baseurl}/recipes/${params.recipeID}`)).data;
-      const imageBlob = (await axios.get(`${baseurl}/recipes/recipe-pictures/${params.recipeID}`,{ responseType:"blob",})).data
-      const imageURL = URL.createObjectURL(imageBlob);
+      const imageURL = recipe?.image && recipe?.image !== '' ?
+      recipe?.image
+      :
+      DefaultRecipePicture
 
       return [recipe, imageURL];
     }

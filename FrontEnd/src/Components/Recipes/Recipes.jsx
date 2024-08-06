@@ -7,6 +7,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBreadSlice, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { baseurl } from "../../routes";
+import DefaultRecipePicture from "./default-recipe-picture.jpg";
 
 export default function Recipes() {
   const [recipes, setRecipes] = useState([]);
@@ -20,16 +21,6 @@ export default function Recipes() {
     </div>,
     <div className="flex flex-col items-center justify-center bg-black bg-opacity-35 w-[250px] h-[250px] rounded-md text-2xl text-[#ff0000]">{errorMessage}</div>,
   ];
-
-  const getImage = (recipe)=>{
-    axios.get(`${baseurl}/recipes/recipe-pictures/${recipe.id}`,{
-      responseType: "blob"
-    })
-    .then((pic)=>{
-      document.getElementById(`${recipe.id}`).src= URL.createObjectURL(pic.data);
-    })
-    .catch((err)=>console.error(err));
-  }
 
   useEffect(() => {
     axios
@@ -59,7 +50,7 @@ export default function Recipes() {
         <div className="min-h-[150px] sm:min-h-[240px] p-2 rounded-[20px] bg-black bg-opacity-50 flex items-center justify-center">
         <img
         loading="lazy"
-        onLoadStart={getImage(recipe)}
+        src={recipe?.image && recipe?.image !== "" ? recipe?.image : DefaultRecipePicture}
         id={recipe.id}
         alt={recipe.name} className="rounded-[18px] lg:h-[300px] "/>
         </div>
