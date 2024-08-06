@@ -19,7 +19,7 @@ import EditRecipe from "./Components/Recipes/EditRecipe";
 import Attributions from "./Components/Attributions/Attributions";
 import DefaultRecipePicture from "./Components/Recipes/default-recipe-picture.jpg";
 
-export const baseurl = 'http://localhost:8000/api';
+export const baseurl = 'https://jjrsandwiches-backend.onrender.com/api';
 
 export const router = createBrowserRouter([
   {
